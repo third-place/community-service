@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/danielmunro/otto-community-service/internal/model"
-	"github.com/danielmunro/otto-community-service/internal/service"
-	"github.com/danielmunro/otto-community-service/internal/test"
+	"github.com/third-place/community-service/internal/model"
+	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/test"
 	"github.com/google/uuid"
 	"testing"
 )

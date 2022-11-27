@@ -1,10 +1,10 @@
 package service_test
 
 import (
-	model2 "github.com/danielmunro/otto-community-service/internal/auth/model"
-	"github.com/danielmunro/otto-community-service/internal/model"
-	"github.com/danielmunro/otto-community-service/internal/service"
-	"github.com/danielmunro/otto-community-service/internal/test"
+	model2 "github.com/third-place/community-service/internal/auth/model"
+	"github.com/third-place/community-service/internal/model"
+	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/test"
 	"testing"
 )
 

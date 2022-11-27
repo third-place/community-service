@@ -1,8 +1,8 @@
 package service
 
 import (
-	model2 "github.com/danielmunro/otto-community-service/internal/auth/model"
-	"github.com/danielmunro/otto-community-service/internal/ownable"
+	model2 "github.com/third-place/community-service/internal/auth/model"
+	"github.com/third-place/community-service/internal/ownable"
 )
 
 type SecurityService struct{}

@@ -10,8 +10,8 @@
 package main
 
 import (
-	"github.com/danielmunro/otto-community-service/internal"
-	"github.com/danielmunro/otto-community-service/internal/middleware"
+	"github.com/third-place/community-service/internal"
+	"github.com/third-place/community-service/internal/middleware"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/cors"
 	"log"

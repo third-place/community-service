@@ -1,4 +1,4 @@
-module github.com/danielmunro/otto-community-service
+module github.com/third-place/community-service
 
 go 1.19
 

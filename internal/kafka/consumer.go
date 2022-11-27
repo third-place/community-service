@@ -2,10 +2,10 @@ package kafka
 
 import (
 	"encoding/json"
-	"github.com/danielmunro/otto-community-service/internal/db"
-	"github.com/danielmunro/otto-community-service/internal/mapper"
-	"github.com/danielmunro/otto-community-service/internal/model"
-	"github.com/danielmunro/otto-community-service/internal/repository"
+	"github.com/third-place/community-service/internal/db"
+	"github.com/third-place/community-service/internal/mapper"
+	"github.com/third-place/community-service/internal/model"
+	"github.com/third-place/community-service/internal/repository"
 	"github.com/google/uuid"
 	"log"
 )

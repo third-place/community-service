@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/danielmunro/otto-community-service/internal/db"
-	"github.com/danielmunro/otto-community-service/internal/repository"
+	"github.com/third-place/community-service/internal/db"
+	"github.com/third-place/community-service/internal/repository"
 )
 
 type ImageService struct {

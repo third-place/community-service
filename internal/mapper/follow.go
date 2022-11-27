@@ -2,8 +2,8 @@ package mapper
 
 import (
 	"encoding/json"
-	"github.com/danielmunro/otto-community-service/internal/entity"
-	"github.com/danielmunro/otto-community-service/internal/model"
+	"github.com/third-place/community-service/internal/entity"
+	"github.com/third-place/community-service/internal/model"
 	"net/http"
 )
 

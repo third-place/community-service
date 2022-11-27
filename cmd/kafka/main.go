@@ -10,7 +10,7 @@
 package main
 
 import (
-	"github.com/danielmunro/otto-community-service/internal/kafka"
+	"github.com/third-place/community-service/internal/kafka"
 	_ "github.com/joho/godotenv/autoload"
 	"log"
 )

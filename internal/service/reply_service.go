@@ -1,12 +1,12 @@
 package service
 
 import (
-	model2 "github.com/danielmunro/otto-community-service/internal/auth/model"
-	"github.com/danielmunro/otto-community-service/internal/db"
-	"github.com/danielmunro/otto-community-service/internal/entity"
-	"github.com/danielmunro/otto-community-service/internal/mapper"
-	"github.com/danielmunro/otto-community-service/internal/model"
-	"github.com/danielmunro/otto-community-service/internal/repository"
+	model2 "github.com/third-place/community-service/internal/auth/model"
+	"github.com/third-place/community-service/internal/db"
+	"github.com/third-place/community-service/internal/entity"
+	"github.com/third-place/community-service/internal/mapper"
+	"github.com/third-place/community-service/internal/model"
+	"github.com/third-place/community-service/internal/repository"
 	"github.com/google/uuid"
 )
 

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/danielmunro/otto-community-service/internal/constants"
-	"github.com/danielmunro/otto-community-service/internal/model"
-	"github.com/danielmunro/otto-community-service/internal/service"
+	"github.com/third-place/community-service/internal/constants"
+	"github.com/third-place/community-service/internal/model"
+	"github.com/third-place/community-service/internal/service"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"net/http"

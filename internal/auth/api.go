@@ -12,7 +12,7 @@ package auth
 import (
 	_context "context"
 	"github.com/antihax/optional"
-	"github.com/danielmunro/otto-community-service/internal/auth/model"
+	"github.com/third-place/community-service/internal/auth/model"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"

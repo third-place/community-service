@@ -10,7 +10,7 @@
 package internal
 
 import (
-	"github.com/danielmunro/otto-community-service/internal/controller"
+	"github.com/third-place/community-service/internal/controller"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strings"

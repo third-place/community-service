@@ -1,7 +1,7 @@
 package test
 
 import (
-	"github.com/danielmunro/otto-community-service/internal/model"
+	"github.com/third-place/community-service/internal/model"
 	"github.com/google/uuid"
 	"math/rand"
 	"strconv"

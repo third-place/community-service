@@ -1,8 +1,8 @@
 package controller
 
 import (
-	model2 "github.com/danielmunro/otto-community-service/internal/auth/model"
-	"github.com/danielmunro/otto-community-service/internal/service"
+	model2 "github.com/third-place/community-service/internal/auth/model"
+	"github.com/third-place/community-service/internal/service"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"net/http"

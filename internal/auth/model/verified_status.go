@@ -8,11 +8,12 @@
  */
 
 package model
+
 // VerifiedStatus the model 'VerifiedStatus'
 type VerifiedStatus string
 
 // List of VerifiedStatus
 const (
 	UNVERIFIED VerifiedStatus = "unverified"
-	VERIFIED VerifiedStatus = "verified"
+	VERIFIED   VerifiedStatus = "verified"
 )

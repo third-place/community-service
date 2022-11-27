@@ -10,8 +10,8 @@
 package internal
 
 import (
-	"github.com/third-place/community-service/internal/controller"
 	"github.com/gorilla/mux"
+	"github.com/third-place/community-service/internal/controller"
 	"net/http"
 	"strings"
 )

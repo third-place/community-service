@@ -1,9 +1,9 @@
 package mapper
 
 import (
+	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
-	"github.com/google/uuid"
 )
 
 func GetUserModelsFromEntities(users []*entity.User) []*model.User {

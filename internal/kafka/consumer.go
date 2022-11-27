@@ -2,11 +2,11 @@ package kafka
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
-	"github.com/google/uuid"
 	"log"
 )
 

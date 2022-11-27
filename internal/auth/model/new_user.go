@@ -8,9 +8,10 @@
  */
 
 package model
+
 // NewUser struct for NewUser
 type NewUser struct {
-	Name string `json:"name,omitempty"`
-	Email string `json:"email"`
+	Name     string `json:"name,omitempty"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }

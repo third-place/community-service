@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/antihax/optional"
+	"github.com/gorilla/sessions"
 	"github.com/third-place/community-service/internal/auth"
 	"github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/repository"
 	"github.com/third-place/community-service/internal/util"
-	"github.com/gorilla/sessions"
 	"log"
 	"net/http"
 )

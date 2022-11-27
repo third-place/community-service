@@ -2,12 +2,12 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/third-place/community-service/internal/constants"
-	"github.com/third-place/community-service/internal/service"
-	uuid2 "github.com/third-place/community-service/internal/uuid"
 	"github.com/google/uuid"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
+	"github.com/third-place/community-service/internal/constants"
+	"github.com/third-place/community-service/internal/service"
+	uuid2 "github.com/third-place/community-service/internal/uuid"
 	"net/http"
 	"time"
 )

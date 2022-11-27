@@ -1,9 +1,9 @@
 package entity
 
 import (
-	"github.com/third-place/community-service/internal/model"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+	"github.com/third-place/community-service/internal/model"
 )
 
 type Report struct {

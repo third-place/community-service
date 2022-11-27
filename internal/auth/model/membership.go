@@ -8,9 +8,11 @@
  */
 
 package model
+
 import (
 	"time"
 )
+
 // Membership struct for Membership
 type Membership struct {
 	Id         int64      `json:"id,omitempty"`

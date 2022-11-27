@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/google/uuid"
 	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/db"
@@ -12,7 +13,6 @@ import (
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
-	"github.com/google/uuid"
 	"sort"
 )
 

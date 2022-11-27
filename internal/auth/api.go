@@ -28,8 +28,8 @@ type DefaultApiService service
 
 /*
 CreateGroupV1 create a group
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param newGroup group to create
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param newGroup group to create
 */
 func (a *DefaultApiService) CreateGroupV1(ctx _context.Context, newGroup model.NewGroup) (*_nethttp.Response, error) {
 	var (
@@ -95,8 +95,9 @@ func (a *DefaultApiService) CreateGroupV1(ctx _context.Context, newGroup model.N
 
 /*
 CreateNewSesssion Create a new user session
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param newSession session to create
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param newSession session to create
+
 @return Session
 */
 func (a *DefaultApiService) CreateNewSesssion(ctx _context.Context, newSession model.NewSession) (model.Session, *_nethttp.Response, error) {
@@ -183,8 +184,8 @@ func (a *DefaultApiService) CreateNewSesssion(ctx _context.Context, newSession m
 
 /*
 CreateNewUser Create a new user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param newUser user to create
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param newUser user to create
 */
 func (a *DefaultApiService) CreateNewUser(ctx _context.Context, newUser model.NewUser) (*_nethttp.Response, error) {
 	var (
@@ -250,7 +251,8 @@ func (a *DefaultApiService) CreateNewUser(ctx _context.Context, newUser model.Ne
 
 /*
 GetGroupV1 get a group
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+
 @return Group
 */
 func (a *DefaultApiService) GetGroupV1(ctx _context.Context) (model.Group, *_nethttp.Response, error) {
@@ -340,9 +342,9 @@ type GetSessionOpts struct {
 
 /*
 GetSession Get a session
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *GetSessionOpts - Optional Parameters:
- * @param "Token" (optional.String) -
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param optional nil or *GetSessionOpts - Optional Parameters:
+  - @param "Token" (optional.String) -
 */
 func (a *DefaultApiService) GetSession(ctx _context.Context, localVarOptionals *GetSessionOpts) (*_nethttp.Response, error) {
 	var (
@@ -390,7 +392,8 @@ func (a *DefaultApiService) GetSession(ctx _context.Context, localVarOptionals *
 
 /*
 GetUserV1 Get a user
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+
 @return User
 */
 func (a *DefaultApiService) GetUserV1(ctx _context.Context) (model.User, *_nethttp.Response, error) {
@@ -475,8 +478,8 @@ func (a *DefaultApiService) GetUserV1(ctx _context.Context) (model.User, *_netht
 
 /*
 RespondToChallenge Respond to an authentication challenge
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param newSession authentication to use in response
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param newSession authentication to use in response
 */
 func (a *DefaultApiService) RespondToChallenge(ctx _context.Context, newSession model.NewSession) (*_nethttp.Response, error) {
 	var (
@@ -542,8 +545,8 @@ func (a *DefaultApiService) RespondToChallenge(ctx _context.Context, newSession 
 
 /*
 UpdateUserSession Update a user's session
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param sessionRefresh session to update
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param sessionRefresh session to update
 */
 func (a *DefaultApiService) UpdateUserSession(ctx _context.Context, sessionRefresh model.SessionRefresh) (*_nethttp.Response, error) {
 	var (

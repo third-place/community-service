@@ -8,11 +8,12 @@
  */
 
 package model
+
 // Visibility the model 'Visibility'
 type Visibility string
 
 // List of Visibility
 const (
-	PUBLIC Visibility = "public"
+	PUBLIC  Visibility = "public"
 	PRIVATE Visibility = "private"
 )

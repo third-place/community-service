@@ -8,6 +8,7 @@
  */
 
 package model
+
 // SessionRefresh struct for SessionRefresh
 type SessionRefresh struct {
 	Token string `json:"token"`

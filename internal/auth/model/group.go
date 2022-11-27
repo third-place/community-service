@@ -8,9 +8,11 @@
  */
 
 package model
+
 import (
 	"time"
 )
+
 // Group struct for Group
 type Group struct {
 	Id         int64      `json:"id"`

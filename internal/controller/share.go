@@ -2,11 +2,11 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"net/http"
 )
 

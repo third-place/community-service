@@ -10,7 +10,6 @@
 package model
 
 type NewReplyReport struct {
-
 	Text string `json:"text,omitempty"`
 
 	User User `json:"user"`

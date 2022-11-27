@@ -2,9 +2,9 @@ package repository
 
 import (
 	"errors"
-	"github.com/third-place/community-service/internal/entity"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+	"github.com/third-place/community-service/internal/entity"
 )
 
 type ShareRepository struct {

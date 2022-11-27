@@ -8,6 +8,7 @@
  */
 
 package model
+
 // NewGroup struct for NewGroup
 type NewGroup struct {
 	Name       string     `json:"name"`

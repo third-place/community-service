@@ -1,13 +1,13 @@
 package service_test
 
 import (
+	"github.com/google/uuid"
 	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/test"
-	"github.com/google/uuid"
 	"testing"
 )
 

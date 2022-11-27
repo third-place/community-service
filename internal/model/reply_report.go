@@ -14,7 +14,6 @@ import (
 )
 
 type ReplyReport struct {
-
 	Uuid string `json:"uuid"`
 
 	CreatedAt time.Time `json:"created_at,omitempty"`

@@ -8,13 +8,14 @@
  */
 
 package model
+
 // Permission the model 'Permission'
 type Permission string
 
 // List of Permission
 const (
-	READ Permission = "read"
-	WRITE Permission = "write"
+	READ     Permission = "read"
+	WRITE    Permission = "write"
 	MODERATE Permission = "moderate"
-	ADMIN Permission = "admin"
+	ADMIN    Permission = "admin"
 )

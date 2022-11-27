@@ -3,13 +3,13 @@ package service
 import (
 	"encoding/json"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
 	kafka2 "github.com/third-place/community-service/internal/kafka"
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
-	"github.com/google/uuid"
 )
 
 type LikeService struct {

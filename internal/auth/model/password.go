@@ -8,9 +8,11 @@
  */
 
 package model
+
 import (
 	"time"
 )
+
 // Password struct for Password
 type Password struct {
 	Id       int64     `json:"id,omitempty"`

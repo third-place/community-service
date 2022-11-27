@@ -1,8 +1,8 @@
 package test
 
 import (
-	"github.com/third-place/community-service/internal/model"
 	"github.com/google/uuid"
+	"github.com/third-place/community-service/internal/model"
 	"math/rand"
 	"strconv"
 	"time"

@@ -10,10 +10,10 @@
 package main
 
 import (
-	"github.com/third-place/community-service/internal"
-	"github.com/third-place/community-service/internal/middleware"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/cors"
+	"github.com/third-place/community-service/internal"
+	"github.com/third-place/community-service/internal/middleware"
 	"log"
 	"net/http"
 )

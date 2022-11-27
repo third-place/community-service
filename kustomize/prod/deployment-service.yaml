@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: community-service
+spec:
+  selector:
+    matchLabels:
+      app: community-service
+  template:
+    metadata:
+      labels:
+        app: community-service
+    spec:
+      containers:
+        - name: otto-community-service
+          image: ghcr.io/danielmunro/otto-community-service:v0.1.41
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+              name: http
+              protocol: TCP
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-community
+                  key: host
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-community
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-community
+                  key: password
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-community
+                  key: port
+            - name: POSTGRES_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-community
+                  key: database
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                secretKeyRef:
+                  name: kafka
+                  key: bootstrap_servers
+            - name: KAFKA_SECURITY_PROTOCOL
+              valueFrom:
+                secretKeyRef:
+                  name: kafka
+                  key: security_protocol
+            - name: KAFKA_SASL_MECHANISM
+              valueFrom:
+                secretKeyRef:
+                  name: kafka
+                  key: sasl_mechanism
+            - name: KAFKA_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: kafka
+                  key: sasl_username
+            - name: KAFKA_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kafka
+                  key: sasl_password
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com
+        - name: postgres-community
+        - name: kafka

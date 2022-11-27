@@ -1,0 +1,45 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: community-service
+  description: Otto community service
+  links:
+    - url: https://github.com/danielmunro/otto-community-service
+      title: Git Repository
+spec:
+  type: service
+  lifecycle: production
+  owner: dev-team
+  providesApis:
+    - community-service-api
+  dependsOn:
+    - api:user-service-api
+    - resource:community-service-db
+    - resource:kafka
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: community-service-api
+  description: Otto community service API
+  links:
+    - url: https://github.com/danielmunro/otto-community-service
+      title: Git Repository
+spec:
+  type: openapi
+  lifecycle: production
+  owner: dev-team
+  definition:
+    $text: https://github.com/danielmunro/otto-community-service/blob/main/api.yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: community-service-db
+  description: Otto community service DB
+spec:
+  type: database
+  lifecycle: production
+  owner: dev-team
+  dependencyOf:
+    - api:community-service

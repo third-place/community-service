@@ -1,0 +1,47 @@
+{"Time":"2022-11-19T12:15:04.313877-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service","Output":"?   \tgithub.com/danielmunro/otto-community-service\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314085-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314141-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/cmd/kafka","Output":"?   \tgithub.com/danielmunro/otto-community-service/cmd/kafka\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314162-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/cmd/kafka","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314187-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314204-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314229-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/auth","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/auth\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314245-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/auth","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314269-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/auth/model","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/auth/model\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314286-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/auth/model","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314315-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/constants","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/constants\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.31433-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/constants","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314351-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/controller","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/controller\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314365-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/controller","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314387-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/db","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/db\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.3144-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/db","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314422-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/entity","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/entity\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314436-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/entity","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314452-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/kafka","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/kafka\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314466-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/kafka","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314491-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/mapper","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/mapper\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314558-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/mapper","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314605-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/middleware","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/middleware\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314617-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/middleware","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314629-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/model","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/model\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314638-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/model","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314658-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/repository","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/repository\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314668-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/repository","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314683-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/service","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/service\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314692-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/service","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314707-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/test","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/test\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314716-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/test","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.31473-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/util","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/util\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314738-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/util","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314754-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/internal/uuid","Output":"?   \tgithub.com/danielmunro/otto-community-service/internal/uuid\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314764-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/internal/uuid","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314776-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/migrations/1_initial","Output":"?   \tgithub.com/danielmunro/otto-community-service/migrations/1_initial\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314787-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/migrations/1_initial","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314805-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/migrations/2_migrate_user_birthday","Output":"?   \tgithub.com/danielmunro/otto-community-service/migrations/2_migrate_user_birthday\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.314815-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/migrations/2_migrate_user_birthday","Elapsed":0}
+{"Time":"2022-11-19T12:15:04.314831-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/migrations/3_add_post_draft","Output":"?   \tgithub.com/danielmunro/otto-community-service/migrations/3_add_post_draft\t[no test files]\n"}
+{"Time":"2022-11-19T12:15:04.31484-08:00","Action":"skip","Package":"github.com/danielmunro/otto-community-service/migrations/3_add_post_draft","Elapsed":0}
+{"Time":"2022-11-19T12:15:07.290798-08:00","Action":"run","Package":"github.com/danielmunro/otto-community-service/test/service","Test":"Test_CanFollow_AUser"}
+{"Time":"2022-11-19T12:15:07.290971-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/test/service","Test":"Test_CanFollow_AUser","Output":"=== RUN   Test_CanFollow_AUser\n"}
+{"Time":"2022-11-19T12:15:07.306261-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/test/service","Test":"Test_CanFollow_AUser","Output":"2022/11/19 12:15:07 dial tcp: lookup port=: no such host\n"}
+{"Time":"2022-11-19T12:15:07.307077-08:00","Action":"output","Package":"github.com/danielmunro/otto-community-service/test/service","Output":"FAIL\tgithub.com/danielmunro/otto-community-service/test/service\t0.250s\n"}
+{"Time":"2022-11-19T12:15:07.307128-08:00","Action":"fail","Package":"github.com/danielmunro/otto-community-service/test/service","Elapsed":0.251}

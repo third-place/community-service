@@ -1,0 +1,814 @@
+openapi: "3.0.0"
+info:
+  title: Otto user service
+  version: "1.0"
+paths:
+  /post:
+    get:
+      operationId: getPostsFirehoseV1
+      summary: get posts from various places
+      responses:
+        '200':
+          description: a list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    post:
+      operationId: createNewPostV1
+      summary: create a new post
+      requestBody:
+        description: post to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPost"
+      responses:
+        '201':
+          description: |-
+            201 response
+    put:
+      operationId: updatePostV1
+      summary: update a post
+      requestBody:
+        description: post to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        '200':
+          description: post updated
+  /post/draft:
+    get:
+      operationId: getDraftPostsV1
+      summary: get draft posts
+      responses:
+        '200':
+          description: a list of draft posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+  /post/{uuid}:
+    get:
+      operationId: getPostV1
+      summary: get a post
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: get a post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: |-
+            404 response
+    delete:
+      operationId: deletePostV1
+      summary: delete a post
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: post deleted
+        '404':
+          description: |-
+            404 response
+  /post/{uuid}/like:
+    post:
+      operationId: createNewPostLikeV1
+      summary: like a post
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: like created
+    get:
+      operationId: getLikesForPostV1
+      summary: get likes for post
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: likes for a post
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostLike'
+    delete:
+      operationId: deleteLikeForPostV1
+      summary: delete like for post
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: like deleted
+  /likes/{username}:
+    get:
+      operationId: getLikedPostsV1
+      summary: get liked posts
+      parameters:
+        - in: path
+          name: username
+          required: true
+      responses:
+        '200':
+          description: liked posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+  /post/{uuid}/reply:
+    get:
+      operationId: getPostRepliesV1
+      summary: get replies to a post
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: post replies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reply'
+        '404':
+          description: |-
+            404 response
+  /reply:
+    post:
+      operationId: createAReplyV1
+      summary: create a reply
+      requestBody:
+        description: reply to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewReply"
+      responses:
+        '201':
+          description: |-
+            201 response
+  /reply/{uuid}/like:
+    post:
+      operationId: createNewReplyLikeV1
+      summary: like a reply
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: like created
+    get:
+      operationId: getLikesForReplyV1
+      summary: get likes for reply
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: likes for a reply
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReplyLike'
+  /report/post:
+    post:
+      operationId: createAPostReportV1
+      summary: create a post report
+      requestBody:
+        description: post report to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPostReport"
+      responses:
+        '201':
+          description: |-
+            201 response
+  /report/reply:
+    post:
+      operationId: createAReplyReportV1
+      summary: create a reply report
+      requestBody:
+        description: reply report to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewReplyReport"
+      responses:
+        '201':
+          description: |-
+            201 response
+  /share:
+    post:
+      operationId: createShareV1
+      summary: create a reshare
+      requestBody:
+        description: reshare to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewShare"
+      responses:
+        '201':
+          description: |-
+            201 response
+    get:
+      operationId: getSharesV1
+      summary: get shares
+      responses:
+        '200':
+          description: a list of shares
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Share'
+  /share/{uuid}:
+    get:
+      operationId: getShareV1
+      summary: get a share
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: get a reshare
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Share'
+        '404':
+          description: |-
+            404 response
+  /posts/{username}:
+    get:
+      operationId: getUserPostsV1
+      summary: get user posts
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A user's posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /posts/{username}/rss:
+    get:
+      operationId: getUserPostsRSSV1
+      summary: get user posts
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A user's posts
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /follow-posts/{username}:
+    get:
+      operationId: getPostsForUserFollowsV1
+      summary: get posts for a user's follows
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Posts for a user's follows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /new-posts/{username}:
+    get:
+      operationId: getNewPostsV1
+      summary: get new posts
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: New posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /follows/{username}:
+    get:
+      operationId: getUserFollowsV1
+      summary: get user follows
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A user's follows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Follow"
+        '404':
+          description: No user found
+  /followers/{username}:
+    get:
+      operationId: getUserFollowersV1
+      summary: get user followers
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Users following this user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Follow"
+        '404':
+          description: No user found
+  /suggested-follows/{username}:
+    get:
+      operationId: getSuggestedFollowsForUserV1
+      summary: get suggested follows for user
+      parameters:
+        - in: path
+          name: username
+          description: a username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A user's follows
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /follow:
+    post:
+      operationId: createFollowV1
+      summary: add a follow
+      requestBody:
+        description: follow to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewFollow"
+      responses:
+        '201':
+          description: Follow created
+  /follow/{uuid}:
+    delete:
+      operationId: deleteFollowV1
+      summary: delete a follow
+      parameters:
+        - in: path
+          name: uuid
+          description: a user ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: follow deleted
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - uuid
+        - name
+        - username
+        - created
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        username:
+          type: string
+        profile_pic:
+          type: string
+        name:
+          type: string
+        bio_message:
+          type: string
+        role:
+          $ref: "#/components/schemas/Role"
+        is_banned:
+          type: boolean
+          default: false
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        replies:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reply"
+        follows:
+          type: array
+          items:
+            $ref: "#/components/schemas/Follow"
+    Follow:
+      type: object
+      required:
+        - uuid
+        - user
+        - following
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        user:
+          $ref: "#/components/schemas/User"
+        following:
+          $ref: "#/components/schemas/User"
+    NewFollow:
+      type: object
+      properties:
+        following:
+          $ref: "#/components/schemas/User"
+    Post:
+      type: object
+      required:
+        - uuid
+        - replies
+        - likes
+        - draft
+        - created_at
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        text:
+          type: string
+        draft:
+          type: boolean
+        likes:
+          type: integer
+        replies:
+          type: integer
+        selfLiked:
+          type: boolean
+        share:
+          $ref: "#/components/schemas/Post"
+        user:
+          $ref: "#/components/schemas/User"
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/Image"
+        created_at:
+          type: string
+          format: date-time
+    NewPost:
+      type: object
+      required:
+        - text
+        - draft
+      properties:
+        text:
+          type: string
+        draft:
+          type: boolean
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewImage"
+    Reply:
+      type: object
+      required:
+        - uuid
+        - created
+        - post
+        - text
+        - user
+        - likes
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        post:
+          $ref: "#/components/schemas/Post"
+        text:
+          type: string
+        likes:
+          type: integer
+        selfLiked:
+          type: boolean
+        user:
+          $ref: "#/components/schemas/User"
+    NewReply:
+      type: object
+      required:
+        - post
+        - text
+      properties:
+        post:
+          $ref: "#/components/schemas/Post"
+        text:
+          type: string
+    Share:
+      type: object
+      required:
+        - uuid
+        - user
+        - post
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        text:
+          type: string
+        selfLiked:
+          type: boolean
+        user:
+          $ref: "#/components/schemas/User"
+        post:
+          $ref: "#/components/schemas/Post"
+    NewShare:
+      type: object
+      required:
+        - user
+        - post
+      properties:
+        text:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        post:
+          $ref: "#/components/schemas/Post"
+    PostReport:
+      type: object
+      required:
+        - uuid
+        - created
+        - user
+        - post
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: timestamp
+        user:
+          $ref: "#/components/schema/User"
+        text:
+          type: string
+        post:
+          $ref: "#/components/schemas/Post"
+    ReplyReport:
+      type: object
+      required:
+        - uuid
+        - created
+        - reporter
+        - reply
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: timestamp
+        user:
+          $ref: "#/components/schema/User"
+        text:
+          type: string
+        reply:
+          $ref: "#/components/schemas/Reply"
+    NewPostReport:
+      type: object
+      required:
+        - user
+        - post
+      properties:
+        text:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        post:
+          $ref: "#/components/schemas/Post"
+    NewReplyReport:
+      type: object
+      required:
+        - user
+        - reply
+      properties:
+        text:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+        reply:
+          $ref: "#/components/schemas/Reply"
+    Visibility:
+      type: string
+      enum:
+        - public
+        - following
+        - private
+    NewImage:
+      type: object
+      required:
+        - uuid
+        - s3_key
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        s3_key:
+          type: string
+    Image:
+      type: object
+      required:
+        - uuid
+        - s3_key
+        - created_at
+        - post
+        - user
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        s3_key:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        selfLiked:
+          type: boolean
+        post:
+          $ref: "#/components/schemas/Post"
+        user:
+          $ref: "#/components/schemas/User"
+    PostLike:
+      type: object
+      required:
+        - post
+        - user
+      properties:
+        post:
+          $ref: "#/components/schemas/Post"
+        user:
+          $ref: "#/components/schemas/User"
+    NewPostLike:
+      type: object
+    ReplyLike:
+      type: object
+      required:
+        - uuid
+        - reply
+        - user
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        post:
+          $ref: "#/components/schemas/Reply"
+        user:
+          $ref: "#/components/schemas/User"
+    NewReplyLike:
+      type: object
+    ImageLike:
+      type: object
+      required:
+        - uuid
+        - image
+        - user
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        post:
+          $ref: "#/components/schemas/Image"
+        user:
+          $ref: "#/components/schemas/User"
+    NewImageLike:
+      type: object
+    Role:
+      type: string
+      enum:
+        - user
+        - moderator
+        - admin

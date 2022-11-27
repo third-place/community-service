@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/danielmunro/otto-community-service/internal/db"
-	"github.com/danielmunro/otto-community-service/internal/entity"
+	"github.com/third-place/community-service/internal/db"
+	"github.com/third-place/community-service/internal/entity"
 	"github.com/joho/godotenv"
 )
 

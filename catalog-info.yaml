@@ -2,9 +2,9 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: community-service
-  description: Otto community service
+  description: Third place community service
   links:
-    - url: https://github.com/danielmunro/otto-community-service
+    - url: https://github.com/third-place/community-service
       title: Git Repository
 spec:
   type: service
@@ -21,16 +21,16 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: community-service-api
-  description: Otto community service API
+  description: Third place community service API
   links:
-    - url: https://github.com/danielmunro/otto-community-service
+    - url: https://github.com/third-place/community-service
       title: Git Repository
 spec:
   type: openapi
   lifecycle: production
   owner: dev-team
   definition:
-    $text: https://github.com/danielmunro/otto-community-service/blob/main/api.yaml
+    $text: https://github.com/third-place/community-service/blob/main/api.yaml
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource

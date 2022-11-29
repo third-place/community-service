@@ -11,28 +11,24 @@ package model
 
 import (
 	"github.com/google/uuid"
+	"github.com/third-place/community-service/internal/entity"
 	"time"
 )
 
 type Reply struct {
-	Uuid string `json:"uuid"`
-
+	Uuid      string    `json:"uuid"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
-
-	Post Post `json:"post"`
-
-	Text string `json:"text"`
-
-	Likes uint `json:"likes"`
-
-	SelfLiked bool `json:"selfLiked,omitempty"`
-
-	User User `json:"user"`
+	Post      Post      `json:"post"`
+	Text      string    `json:"text"`
+	Likes     uint      `json:"likes"`
+	SelfLiked bool      `json:"selfLiked,omitempty"`
+	User      User      `json:"user"`
 }
 
-func CreateReply(postUuid *uuid.UUID, replyUserUuid *uuid.UUID, message string) *Reply {
+func CreateReply(postUuid *uuid.UUID, replyUserUuid *uuid.UUID, replyEntity *entity.Post) *Reply {
 	return &Reply{
-		Text: message,
+		Uuid: replyEntity.Uuid.String(),
+		Text: replyEntity.Text,
 		Post: Post{
 			Uuid: postUuid.String(),
 		},

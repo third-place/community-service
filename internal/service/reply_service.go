@@ -1,13 +1,17 @@
 package service
 
 import (
+	"encoding/json"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
+	kafka2 "github.com/third-place/community-service/internal/kafka"
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"log"
 )
 
 type ReplyService struct {
@@ -15,6 +19,7 @@ type ReplyService struct {
 	postRepository  *repository.PostRepository
 	replyRepository *repository.ReplyRepository
 	securityService *SecurityService
+	kafkaWriter     *kafka.Producer
 }
 
 func CreateReplyService() *ReplyService {
@@ -24,6 +29,7 @@ func CreateReplyService() *ReplyService {
 		repository.CreatePostRepository(conn),
 		repository.CreateReplyRepository(conn),
 		&SecurityService{},
+		kafka2.CreateWriter(),
 	}
 }
 
@@ -40,7 +46,12 @@ func (r *ReplyService) CreateReply(session *model2.Session, reply *model.NewRepl
 	r.replyRepository.Create(replyEntity)
 	post.Replies += 1
 	r.postRepository.Save(post)
-	return mapper.GetPostModelFromEntity(replyEntity), nil
+	replyModel := mapper.GetPostModelFromEntity(replyEntity)
+	err = r.publishPostToKafka(replyModel)
+	if err != nil {
+		log.Print("error writing reply to kafka :: ", err)
+	}
+	return replyModel, nil
 }
 
 func (r *ReplyService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, error) {
@@ -50,4 +61,19 @@ func (r *ReplyService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, err
 	}
 	replies := r.replyRepository.FindRepliesForPost(post)
 	return mapper.GetPostModelsFromEntities(replies), nil
+}
+
+func (r *ReplyService) publishPostToKafka(post *model.Post) error {
+	topic := "posts"
+	data, _ := json.Marshal(post)
+	return r.kafkaWriter.Produce(
+		&kafka.Message{
+			Value: data,
+			TopicPartition: kafka.TopicPartition{
+				Topic:     &topic,
+				Partition: kafka.PartitionAny,
+			},
+		},
+		nil,
+	)
 }

@@ -46,7 +46,7 @@ func (r *ReplyService) CreateReply(session *model2.Session, reply *model.NewRepl
 	r.replyRepository.Create(replyEntity)
 	post.Replies += 1
 	r.postRepository.Save(post)
-	replyModel := model.CreateReply(post.Uuid, user.Uuid, replyEntity)
+	replyModel := model.CreateReply(post.Uuid, user.Uuid, replyEntity.Uuid, replyEntity.Text)
 	err = r.publishReplyToKafka(replyModel)
 	if err != nil {
 		log.Print("error writing reply to kafka :: ", err)

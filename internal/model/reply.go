@@ -11,7 +11,6 @@ package model
 
 import (
 	"github.com/google/uuid"
-	"github.com/third-place/community-service/internal/entity"
 	"time"
 )
 
@@ -25,10 +24,10 @@ type Reply struct {
 	User      User      `json:"user"`
 }
 
-func CreateReply(postUuid *uuid.UUID, replyUserUuid *uuid.UUID, replyEntity *entity.Post) *Reply {
+func CreateReply(postUuid *uuid.UUID, replyUserUuid *uuid.UUID, replyUuid *uuid.UUID, text string) *Reply {
 	return &Reply{
-		Uuid: replyEntity.Uuid.String(),
-		Text: replyEntity.Text,
+		Uuid: replyUuid.String(),
+		Text: text,
 		Post: Post{
 			Uuid: postUuid.String(),
 		},

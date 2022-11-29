@@ -30,6 +30,18 @@ type Reply struct {
 	User User `json:"user"`
 }
 
+func CreateReply(postUuid *uuid.UUID, replyUserUuid *uuid.UUID, message string) *Reply {
+	return &Reply{
+		Text: message,
+		Post: Post{
+			Uuid: postUuid.String(),
+		},
+		User: User{
+			Uuid: replyUserUuid.String(),
+		},
+	}
+}
+
 func CreateNewReply(postUuid *uuid.UUID, message string) *NewReply {
 	return &NewReply{
 		Text: message,

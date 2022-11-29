@@ -46,12 +46,12 @@ func (r *ReplyService) CreateReply(session *model2.Session, reply *model.NewRepl
 	r.replyRepository.Create(replyEntity)
 	post.Replies += 1
 	r.postRepository.Save(post)
-	replyModel := mapper.GetPostModelFromEntity(replyEntity)
-	err = r.publishPostToKafka(replyModel)
+	replyModel := model.CreateReply(post.Uuid, user.Uuid, replyEntity.Text)
+	err = r.publishReplyToKafka(replyModel)
 	if err != nil {
 		log.Print("error writing reply to kafka :: ", err)
 	}
-	return replyModel, nil
+	return mapper.GetPostModelFromEntity(replyEntity), nil
 }
 
 func (r *ReplyService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, error) {
@@ -63,9 +63,9 @@ func (r *ReplyService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, err
 	return mapper.GetPostModelsFromEntities(replies), nil
 }
 
-func (r *ReplyService) publishPostToKafka(post *model.Post) error {
-	topic := "posts"
-	data, _ := json.Marshal(post)
+func (r *ReplyService) publishReplyToKafka(reply *model.Reply) error {
+	topic := "replies"
+	data, _ := json.Marshal(reply)
 	return r.kafkaWriter.Produce(
 		&kafka.Message{
 			Value: data,

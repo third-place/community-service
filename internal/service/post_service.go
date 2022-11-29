@@ -164,19 +164,18 @@ func (p *PostService) GetPostsFirehose(username *string, limit int) ([]*model.Po
 	var selfPosts []*entity.Post
 	var followingPosts []*entity.Post
 	var publicPosts []*entity.Post
-	remaining := constants.UserPostsDefaultPageSize
 	var user *entity.User
 	if username != nil {
 		user, _ = p.userRepository.FindOneByUsername(*username)
 		selfPosts = p.postRepository.FindPublishedByUser(user, limit)
-		remaining -= len(selfPosts)
+		limit -= len(selfPosts)
 	}
-	if remaining > 0 && username != nil {
-		followingPosts = p.postRepository.FindByUserFollows(*username, remaining)
-		remaining -= len(followingPosts)
+	if limit > 0 && username != nil {
+		followingPosts = p.postRepository.FindByUserFollows(*username, limit)
+		limit -= len(followingPosts)
 	}
-	if remaining > 0 {
-		publicPosts = p.postRepository.FindAll(remaining)
+	if limit > 0 {
+		publicPosts = p.postRepository.FindAll(limit)
 	}
 	allPosts := append(selfPosts, followingPosts...)
 	allPosts = append(allPosts, publicPosts...)

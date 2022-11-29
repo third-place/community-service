@@ -1,6 +1,6 @@
 package constants
 
-const UserPostsDefaultPageSize = 50
+const UserPostsDefaultPageSize = 10
 
 const ErrorMessageUserNotFound = "no user found"
 const ErrorMessagePostNotFound = "no post found"

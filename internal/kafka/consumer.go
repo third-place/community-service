@@ -25,7 +25,7 @@ func loopKafkaReader(userRepository *repository.UserRepository) error {
 	}
 	log.Print("listening for kafka messages")
 	for {
-		data, err := reader.ReadMessage(60)
+		data, err := reader.ReadMessage(20000)
 		if err != nil {
 			log.Print(err)
 			return nil

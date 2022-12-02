@@ -13,7 +13,7 @@ func GetReader() (*kafka.Consumer, error) {
 		//"sasl.username":     os.Getenv("KAFKA_SASL_USERNAME"),
 		//"sasl.password":     os.Getenv("KAFKA_SASL_PASSWORD"),
 		"group.id":          "community-service",
-		"auto.offset.reset": "earliest",
+		"auto.offset.reset": "smallest",
 	})
 	if err != nil {
 		return nil, err

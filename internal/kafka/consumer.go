@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"encoding/json"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/mapper"
@@ -12,29 +13,28 @@ import (
 
 func InitializeAndRunLoop() {
 	userRepository := repository.CreateUserRepository(db.CreateDefaultConnection())
-	err := loopKafkaReader(userRepository)
-	if err != nil {
-		log.Fatal(err)
-	}
+	loopKafkaReader(userRepository)
 }
 
-func loopKafkaReader(userRepository *repository.UserRepository) error {
+func loopKafkaReader(userRepository *repository.UserRepository) {
 	reader, err := GetReader()
 	if err != nil {
-		return err
+		return
 	}
 	log.Print("listening for kafka messages")
 	for {
-		data, err := reader.ReadMessage(20000)
-		if err != nil {
-			log.Print(err)
-			return nil
-		}
-		log.Printf("message received on topic :: %s, data :: %s", data.TopicPartition.String(), string(data.Value))
-		if *data.TopicPartition.Topic == "users" {
-			readUser(userRepository, data.Value)
-		} else if *data.TopicPartition.Topic == "images" {
-			updateUserImage(userRepository, data.Value)
+		ev := reader.Poll(60000)
+		switch e := ev.(type) {
+		case *kafka.Message:
+			log.Printf("message received on topic :: %s, data :: %s", e.TopicPartition.String(), string(e.Value))
+			if *e.TopicPartition.Topic == "users" {
+				readUser(userRepository, e.Value)
+			} else if *e.TopicPartition.Topic == "images" {
+				updateUserImage(userRepository, e.Value)
+			}
+		case kafka.Error:
+			log.Print("Error :: ", e)
+			return
 		}
 	}
 }

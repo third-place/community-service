@@ -8,6 +8,7 @@ import (
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
 	"log"
+	"time"
 )
 
 func InitializeAndRunLoop() {
@@ -23,15 +24,14 @@ func loopKafkaReader(userRepository *repository.UserRepository) error {
 	if err != nil {
 		return err
 	}
+	log.Print("listening for kafka messages")
 	for {
-		log.Print("listening for kafka messages")
-		data, err := reader.ReadMessage(-1)
-		log.Print("message received on topic :: ", data.TopicPartition.String())
+		data, err := reader.ReadMessage(time.Duration(time.Now().Minute()))
 		if err != nil {
 			log.Print(err)
 			return nil
 		}
-		log.Print("data :: ", string(data.Value))
+		log.Printf("message received on topic :: %s, data :: %s", data.TopicPartition.String(), string(data.Value))
 		if *data.TopicPartition.Topic == "users" {
 			readUser(userRepository, data.Value)
 		} else if *data.TopicPartition.Topic == "images" {

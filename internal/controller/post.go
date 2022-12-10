@@ -8,12 +8,14 @@ import (
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
 	iUuid "github.com/third-place/community-service/internal/uuid"
+	"log"
 	"net/http"
 )
 
 // CreateNewPostV1 - create a new post
 func CreateNewPostV1(w http.ResponseWriter, r *http.Request) {
 	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	log.Print("session returned :: ", session)
 	newPostModel, _ := model.DecodeRequestToNewPost(r)
 	post, err := service.CreatePostService().CreatePost(session, newPostModel)
 	if err != nil {

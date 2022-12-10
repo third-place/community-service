@@ -8,14 +8,16 @@ import (
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
 	iUuid "github.com/third-place/community-service/internal/uuid"
-	"log"
 	"net/http"
 )
 
 // CreateNewPostV1 - create a new post
 func CreateNewPostV1(w http.ResponseWriter, r *http.Request) {
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	log.Print("session returned :: ", session)
+	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	newPostModel, _ := model.DecodeRequestToNewPost(r)
 	post, err := service.CreatePostService().CreatePost(session, newPostModel)
 	if err != nil {
@@ -29,8 +31,12 @@ func CreateNewPostV1(w http.ResponseWriter, r *http.Request) {
 // UpdatePostV1 - update a post
 func UpdatePostV1(w http.ResponseWriter, r *http.Request) {
 	postModel, _ := model.DecodeRequestToPost(r)
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	err := service.CreatePostService().UpdatePost(session, postModel)
+	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	err = service.CreatePostService().UpdatePost(session, postModel)
 	if err != nil {
 		w.WriteHeader(400)
 	}
@@ -40,7 +46,7 @@ func UpdatePostV1(w http.ResponseWriter, r *http.Request) {
 func GetPostV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=60")
 	authService := service.CreateDefaultAuthService()
-	session := authService.GetSessionFromRequest(r)
+	session, _ := authService.GetSessionFromRequest(r)
 	post, err := service.CreatePostService().GetPost(
 		session,
 		iUuid.GetUuidFromPathSecondPosition(r.URL.Path))
@@ -57,7 +63,7 @@ func GetUserFollowsPostsV1(w http.ResponseWriter, r *http.Request) {
 	limit := constants.UserPostsDefaultPageSize
 	params := mux.Vars(r)
 	username := params["username"]
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, _ := service.CreateDefaultAuthService().GetSessionFromRequest(r)
 	var viewerUuid uuid.UUID
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)
@@ -84,8 +90,8 @@ func GetNewPostsV1(w http.ResponseWriter, r *http.Request) {
 func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
 	authService := service.CreateDefaultAuthService()
-	session := authService.GetSessionFromRequest(r)
-	if session == nil {
+	session, err := authService.GetSessionFromRequest(r)
+	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -101,7 +107,11 @@ func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 func GetPostsFirehoseV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
 	authService := service.CreateDefaultAuthService()
-	session := authService.GetSessionFromRequest(r)
+	session, err := authService.GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	var viewerUsername string
 	if session != nil {
 		viewerUser, _ := service.CreateDefaultUserService().GetUser(uuid.MustParse(session.User.Uuid))
@@ -129,7 +139,11 @@ func GetLikedPostsV1(w http.ResponseWriter, r *http.Request) {
 // DeletePostV1 - delete a post
 func DeletePostV1(w http.ResponseWriter, r *http.Request) {
 	authService := service.CreateDefaultAuthService()
-	session := authService.GetSessionFromRequest(r)
+	session, err := authService.GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 	params := mux.Vars(r)
 	postUuid, err := uuid.Parse(params["uuid"])
 	if err != nil {

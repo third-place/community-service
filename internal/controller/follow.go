@@ -18,8 +18,8 @@ func CreateFollowV1(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	if session == nil {
+	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -30,21 +30,6 @@ func CreateFollowV1(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusCreated)
 	data, _ := json.Marshal(follow)
-	_, _ = w.Write(data)
-}
-
-// GetUserFollowersByUsernameV1 - get user followers
-func GetUserFollowersByUsernameV1(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	usernameParam := params["username"]
-
-	follows, err := service.CreateFollowService().GetUserFollowersByUsername(usernameParam)
-	if err != nil {
-		log.Print("error received from get user follows :: ", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	data, _ := json.Marshal(follows)
 	_, _ = w.Write(data)
 }
 
@@ -78,13 +63,13 @@ func GetUserFollowsV1(w http.ResponseWriter, r *http.Request) {
 
 // DeleteFollowV1 - delete a follow
 func DeleteFollowV1(w http.ResponseWriter, r *http.Request) {
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	if session == nil {
+	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	followUuid := iUuid.GetUuidFromPathSecondPosition(r.URL.Path)
-	err := service.CreateFollowService().DeleteFollow(followUuid, uuid.MustParse(session.User.Uuid))
+	err = service.CreateFollowService().DeleteFollow(followUuid, uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	}

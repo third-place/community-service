@@ -17,7 +17,7 @@ func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
 	params := mux.Vars(r)
 	username := params["username"]
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, _ := service.CreateDefaultAuthService().GetSessionFromRequest(r)
 	var viewerUuid uuid.UUID
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)
@@ -63,7 +63,7 @@ func GetUserPostsV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
 	params := mux.Vars(r)
 	username := params["username"]
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, _ := service.CreateDefaultAuthService().GetSessionFromRequest(r)
 	var viewerUuid uuid.UUID
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)

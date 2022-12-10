@@ -9,9 +9,9 @@ import (
 
 // CreatePostReportV1 - report a post
 func CreatePostReportV1(w http.ResponseWriter, r *http.Request) {
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	if session == nil {
-		w.WriteHeader(http.StatusUnauthorized)
+	_, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 	newReport := model.DecodeRequestToNewPostReport(r)
@@ -26,9 +26,9 @@ func CreatePostReportV1(w http.ResponseWriter, r *http.Request) {
 
 // CreateReplyReportV1 - report a reply
 func CreateReplyReportV1(w http.ResponseWriter, r *http.Request) {
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	if session == nil {
-		w.WriteHeader(http.StatusUnauthorized)
+	_, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 	newReport := model.DecodeRequestToNewPostReport(r)

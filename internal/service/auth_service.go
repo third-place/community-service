@@ -28,16 +28,16 @@ func CreateDefaultAuthService() *AuthService {
 	}
 }
 
-func (a *AuthService) GetSessionFromRequest(r *http.Request) *model.Session {
+func (a *AuthService) GetSessionFromRequest(r *http.Request) (*model.Session, error) {
 	sessionToken := a.getSessionToken(r)
-	if sessionToken != "" {
-		session, err := a.getSession(sessionToken)
-		if err != nil {
-			log.Print("error getting session :: ", err)
-		}
-		return session
+	if sessionToken == "" {
+		return nil, errors.New("no session token found")
 	}
-	return nil
+	session, err := a.getSession(sessionToken)
+	if err != nil {
+		return nil, err
+	}
+	return session, nil
 }
 
 func (a *AuthService) DoWithValidSession(w http.ResponseWriter, r *http.Request, doAction func(session *model.Session) (interface{}, error)) {

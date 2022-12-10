@@ -10,9 +10,9 @@ import (
 
 // CreateAReplyV1 - create a reply
 func CreateAReplyV1(w http.ResponseWriter, r *http.Request) {
-	session := service.CreateDefaultAuthService().GetSessionFromRequest(r)
-	if session == nil {
-		w.WriteHeader(http.StatusUnauthorized)
+	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 	newReplyModel := model.DecodeRequestToNewReply(r)

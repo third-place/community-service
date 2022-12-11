@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"github.com/google/uuid"
-	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
@@ -20,7 +19,7 @@ func createTestUser() *entity.User {
 func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 
 	// when
@@ -35,7 +34,7 @@ func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 func Test_PostService_CreateNewPost_WithPrivateVisibility(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 
 	// given
@@ -53,7 +52,7 @@ func Test_PostService_CreateNewPost_WithPrivateVisibility(t *testing.T) {
 func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 	newPost := model.CreateNewPost(message)
 	newPost.Visibility = model.PRIVATE
@@ -70,7 +69,7 @@ func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 func Test_PostService_CreateNewPost_WithFollowingVisibility(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 
 	// given
@@ -88,11 +87,11 @@ func Test_PostService_CreateNewPost_WithFollowingVisibility(t *testing.T) {
 func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
 	// setup
 	testUser1 := createTestUser()
-	session1 := model2.CreateSessionModelFromString(*testUser1.Uuid)
+	session1 := model.CreateSessionModelFromString(*testUser1.Uuid)
 	testUser2 := createTestUser()
-	session2 := model2.CreateSessionModelFromString(*testUser2.Uuid)
+	session2 := model.CreateSessionModelFromString(*testUser2.Uuid)
 	testUser3 := createTestUser()
-	session3 := model2.CreateSessionModelFromString(*testUser3.Uuid)
+	session3 := model.CreateSessionModelFromString(*testUser3.Uuid)
 	_, _ = service.CreateFollowService().CreateFollow(
 		*testUser1.Uuid, &model.NewFollow{Following: model.User{Uuid: testUser2.Uuid.String()}})
 	postService := service.CreatePostService()
@@ -115,7 +114,7 @@ func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
 func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
 	// setup
 	userUuid, _ := uuid.NewRandom()
-	session := model2.CreateSessionModelFromString(userUuid)
+	session := model.CreateSessionModelFromString(userUuid)
 	postService := service.CreatePostService()
 
 	// when
@@ -129,7 +128,7 @@ func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
 func Test_PostService_Can_DeletePost(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 	postModel, _ := postService.CreatePost(session, model.CreateNewPost(message))
 
@@ -143,7 +142,7 @@ func Test_PostService_Can_DeletePost(t *testing.T) {
 func Test_PostService_CannotGet_DeletedPost(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 	postModel, _ := postService.CreatePost(session, model.CreateNewPost(message))
 	_ = postService.DeletePost(session, uuid.MustParse(postModel.Uuid))
@@ -184,7 +183,7 @@ func Test_GetPosts_NoSession(t *testing.T) {
 func Test_GetPost(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 
 	// given
@@ -217,7 +216,7 @@ func Test_GetPost_Fails_WhenNotFound(t *testing.T) {
 func Test_PostService_GetUserPosts(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 
 	// given
@@ -235,7 +234,7 @@ func Test_PostService_GetUserPosts(t *testing.T) {
 func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	// setup
 	testUserUuid, _ := uuid.NewRandom()
-	session := model2.CreateSessionModelFromString(testUserUuid)
+	session := model.CreateSessionModelFromString(testUserUuid)
 	postService := service.CreatePostService()
 
 	// given
@@ -264,7 +263,7 @@ func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 		*testUser.Uuid,
 		&model.NewFollow{Following: model.User{Uuid: following.Uuid.String()}},
 	)
-	session := model2.CreateSessionModelFromString(*following.Uuid)
+	session := model.CreateSessionModelFromString(*following.Uuid)
 
 	// given
 	for i := 0; i < 5; i++ {

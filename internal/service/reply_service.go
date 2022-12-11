@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
-	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
 	kafka2 "github.com/third-place/community-service/internal/kafka"
@@ -33,7 +32,7 @@ func CreateReplyService() *ReplyService {
 	}
 }
 
-func (r *ReplyService) CreateReply(session *model2.Session, reply *model.NewReply) (*model.Post, error) {
+func (r *ReplyService) CreateReply(session *model.Session, reply *model.NewReply) (*model.Post, error) {
 	user, err := r.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		return nil, err

@@ -7,13 +7,14 @@ import (
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/util"
 	iUuid "github.com/third-place/community-service/internal/uuid"
 	"net/http"
 )
 
 // CreateNewPostV1 - create a new post
 func CreateNewPostV1(w http.ResponseWriter, r *http.Request) {
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -31,7 +32,7 @@ func CreateNewPostV1(w http.ResponseWriter, r *http.Request) {
 // UpdatePostV1 - update a post
 func UpdatePostV1(w http.ResponseWriter, r *http.Request) {
 	postModel, _ := model.DecodeRequestToPost(r)
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -45,8 +46,7 @@ func UpdatePostV1(w http.ResponseWriter, r *http.Request) {
 // GetPostV1 - get a post
 func GetPostV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=60")
-	authService := service.CreateDefaultAuthService()
-	session, _ := authService.GetSessionFromRequest(r)
+	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	post, err := service.CreatePostService().GetPost(
 		session,
 		iUuid.GetUuidFromPathSecondPosition(r.URL.Path))
@@ -63,7 +63,7 @@ func GetUserFollowsPostsV1(w http.ResponseWriter, r *http.Request) {
 	limit := constants.UserPostsDefaultPageSize
 	params := mux.Vars(r)
 	username := params["username"]
-	session, _ := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	var viewerUuid uuid.UUID
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)
@@ -89,8 +89,7 @@ func GetNewPostsV1(w http.ResponseWriter, r *http.Request) {
 // GetDraftPostsV1 - get draft posts
 func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
-	authService := service.CreateDefaultAuthService()
-	session, err := authService.GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -106,8 +105,7 @@ func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 // GetPostsFirehoseV1 - get posts
 func GetPostsFirehoseV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
-	authService := service.CreateDefaultAuthService()
-	session, err := authService.GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -138,8 +136,7 @@ func GetLikedPostsV1(w http.ResponseWriter, r *http.Request) {
 
 // DeletePostV1 - delete a post
 func DeletePostV1(w http.ResponseWriter, r *http.Request) {
-	authService := service.CreateDefaultAuthService()
-	session, err := authService.GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return

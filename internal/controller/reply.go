@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/util"
 	iUuid "github.com/third-place/community-service/internal/uuid"
 	"net/http"
 )
 
 // CreateAReplyV1 - create a reply
 func CreateAReplyV1(w http.ResponseWriter, r *http.Request) {
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return

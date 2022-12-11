@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/util"
 	iUuid "github.com/third-place/community-service/internal/uuid"
 	"log"
 	"net/http"
@@ -18,7 +19,7 @@ func CreateFollowV1(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -63,7 +64,7 @@ func GetUserFollowsV1(w http.ResponseWriter, r *http.Request) {
 
 // DeleteFollowV1 - delete a follow
 func DeleteFollowV1(w http.ResponseWriter, r *http.Request) {
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return

@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/util"
 	uuid2 "github.com/third-place/community-service/internal/uuid"
 	"net/http"
 	"time"
@@ -17,7 +18,7 @@ func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
 	params := mux.Vars(r)
 	username := params["username"]
-	session, _ := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	var viewerUuid uuid.UUID
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)
@@ -63,7 +64,7 @@ func GetUserPostsV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
 	params := mux.Vars(r)
 	username := params["username"]
-	session, _ := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	var viewerUuid uuid.UUID
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)

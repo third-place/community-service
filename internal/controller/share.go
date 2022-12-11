@@ -7,6 +7,7 @@ import (
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/util"
 	"net/http"
 )
 
@@ -25,8 +26,7 @@ func GetShareV1(w http.ResponseWriter, r *http.Request) {
 
 // GetSharesV1 - get shares
 func GetSharesV1(w http.ResponseWriter, r *http.Request) {
-	authService := service.CreateDefaultAuthService()
-	session, _ := authService.GetSessionFromRequest(r)
+	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	var viewerUsername string
 	if session != nil {
 		viewerUser, _ := service.CreateDefaultUserService().GetUser(uuid.MustParse(session.User.Uuid))

@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/service"
+	"github.com/third-place/community-service/internal/util"
 	"net/http"
 )
 
@@ -12,7 +13,7 @@ import (
 func CreateNewPostLikeV1(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	uuidParam := uuid.MustParse(params["uuid"])
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -30,7 +31,7 @@ func CreateNewPostLikeV1(w http.ResponseWriter, r *http.Request) {
 func DeleteLikeForPostV1(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	uuidParam := uuid.MustParse(params["uuid"])
-	session, err := service.CreateDefaultAuthService().GetSessionFromRequest(r)
+	session, err := util.GetSession(r.Header.Get("x-session-token"))
 	if err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return

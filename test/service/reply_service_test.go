@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"github.com/google/uuid"
-	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
@@ -22,7 +21,7 @@ func createReplyModel(post *model.Post) *model.NewReply {
 func Test_GetReplies_ForPost(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 	replyService := service.CreateReplyService()
 	post, err := postService.CreatePost(session, model.CreateNewPost("this is a test"))
@@ -46,7 +45,7 @@ func Test_GetReplies_ForPost(t *testing.T) {
 func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
 	// setup
 	testUser, _ := uuid.NewRandom()
-	session := model2.CreateSessionModelFromString(testUser)
+	session := model.CreateSessionModelFromString(testUser)
 	replyService := service.CreateReplyService()
 
 	// when
@@ -68,7 +67,7 @@ func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
 func Test_CreateReply_Fails_WithMissing_Post(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	replyService := service.CreateReplyService()
 
 	// when

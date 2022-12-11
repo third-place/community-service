@@ -1,7 +1,6 @@
 package service_test
 
 import (
-	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/test"
@@ -11,7 +10,7 @@ import (
 func Test_ShareService_CanCreate_NewShare(t *testing.T) {
 	// setup
 	testUser := createTestUser()
-	session := model2.CreateSessionModelFromString(*testUser.Uuid)
+	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 	shareService := service.CreateDefaultShareService()
 	post, _ := postService.CreatePost(session, model.CreateNewPost(message))

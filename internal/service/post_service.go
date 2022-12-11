@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
-	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
@@ -39,7 +38,7 @@ func CreatePostService() *PostService {
 	}
 }
 
-func (p *PostService) GetPost(session *model2.Session, postUuid uuid.UUID) (*model.Post, error) {
+func (p *PostService) GetPost(session *model.Session, postUuid uuid.UUID) (*model.Post, error) {
 	post, err := p.postRepository.FindOneByUuid(postUuid)
 	if err != nil {
 		return nil, err
@@ -56,7 +55,7 @@ func (p *PostService) GetPost(session *model2.Session, postUuid uuid.UUID) (*mod
 	return mapper.GetPostModelFromEntity(postsWithShare[0]), nil
 }
 
-func (p *PostService) CreatePost(session *model2.Session, newPost *model.NewPost) (*model.Post, error) {
+func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost) (*model.Post, error) {
 	user, err := p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		return nil, err
@@ -76,7 +75,7 @@ func (p *PostService) CreatePost(session *model2.Session, newPost *model.NewPost
 	return postModel, err
 }
 
-func (p *PostService) UpdatePost(session *model2.Session, postModel *model.Post) error {
+func (p *PostService) UpdatePost(session *model.Session, postModel *model.Post) error {
 	postEntity, err := p.postRepository.FindOneByUuid(uuid.MustParse(postModel.Uuid))
 	if err != nil || !p.securityService.Owns(session, postEntity) {
 		return errors.New("user cannot update post")
@@ -88,7 +87,7 @@ func (p *PostService) UpdatePost(session *model2.Session, postModel *model.Post)
 	return nil
 }
 
-func (p *PostService) DeletePost(session *model2.Session, postUuid uuid.UUID) error {
+func (p *PostService) DeletePost(session *model.Session, postUuid uuid.UUID) error {
 	post, err := p.postRepository.FindOneByUuid(postUuid)
 	if err != nil {
 		return err
@@ -259,7 +258,7 @@ func (p *PostService) publishPostToKafka(post *model.Post) error {
 	)
 }
 
-func (p *PostService) canSee(session *model2.Session, post *entity.Post) bool {
+func (p *PostService) canSee(session *model.Session, post *entity.Post) bool {
 	if post.Visibility == model.PUBLIC {
 		return true
 	}

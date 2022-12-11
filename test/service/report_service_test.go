@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"github.com/google/uuid"
-	model2 "github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
@@ -13,7 +12,7 @@ import (
 func Test_PostReport_HappyPath(t *testing.T) {
 	// setup
 	user1 := createTestUser()
-	session := model2.CreateSessionModelFromString(*user1.Uuid)
+	session := model.CreateSessionModelFromString(*user1.Uuid)
 	postService := service.CreatePostService()
 	post, _ := postService.CreatePost(session, model.CreateNewPost(""))
 	user2 := createTestUser()
@@ -61,7 +60,7 @@ func Test_PostReport_Fails_WhenUserMissing(t *testing.T) {
 func Test_ReplyReport_HappyPath(t *testing.T) {
 	// setup
 	user1 := createTestUser()
-	session1 := model2.CreateSessionModelFromString(*user1.Uuid)
+	session1 := model.CreateSessionModelFromString(*user1.Uuid)
 	postService := service.CreatePostService()
 	post, _ := postService.CreatePost(session1, model.CreateNewPost(""))
 	replyService := service.CreateReplyService()

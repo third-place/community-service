@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
@@ -67,14 +66,4 @@ func (a *AuthService) getSession(sessionToken string) (*model.Session, error) {
 
 func (a *AuthService) getSessionToken(r *http.Request) string {
 	return r.Header.Get("x-session-token")
-}
-
-func DecodeRequestToNewSession(r *http.Response) (*model.Session, error) {
-	decoder := json.NewDecoder(r.Body)
-	var session *model.Session
-	err := decoder.Decode(&session)
-	if err != nil {
-		return nil, err
-	}
-	return session, nil
 }

@@ -1,17 +1,21 @@
 package service
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-	"github.com/antihax/optional"
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"github.com/gorilla/sessions"
 	"github.com/third-place/community-service/internal/auth"
 	"github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/db"
+	model2 "github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
 	"net/http"
+	"os"
 )
+
+var jwtKey = []byte(os.Getenv("JWT_KEY"))
 
 type AuthService struct {
 	client         *auth.APIClient
@@ -38,16 +42,27 @@ func (a *AuthService) GetSessionFromRequest(r *http.Request) (*model.Session, er
 	return session, nil
 }
 
-func (a *AuthService) getSession(sessionId string) (*model.Session, error) {
-	ctx := context.TODO()
-	response, _ := a.client.DefaultApi.GetSession(ctx, &auth.GetSessionOpts{
-		Token: optional.NewString(sessionId),
+func (a *AuthService) getSession(sessionToken string) (*model.Session, error) {
+	claims := &model2.Claims{}
+	token, err := jwt.ParseWithClaims(sessionToken, claims, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
 	})
-	if response == nil || response.StatusCode != http.StatusOK {
-		return nil, errors.New("no session found")
+	if err != nil {
+		return nil, err
 	}
-	session, _ := DecodeRequestToNewSession(response)
-	return session, nil
+	if !token.Valid {
+		return nil, errors.New("token not valid")
+	}
+	_, err = uuid.Parse(claims.UserUuid)
+	if err != nil {
+		return nil, err
+	}
+	return &model.Session{
+		User: model.User{
+			Uuid: claims.UserUuid,
+		},
+		Token: sessionToken,
+	}, nil
 }
 
 func (a *AuthService) getSessionToken(r *http.Request) string {

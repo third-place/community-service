@@ -10,8 +10,6 @@ import (
 	"github.com/third-place/community-service/internal/auth/model"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/repository"
-	"github.com/third-place/community-service/internal/util"
-	"log"
 	"net/http"
 )
 
@@ -38,25 +36,6 @@ func (a *AuthService) GetSessionFromRequest(r *http.Request) (*model.Session, er
 		return nil, err
 	}
 	return session, nil
-}
-
-func (a *AuthService) DoWithValidSession(w http.ResponseWriter, r *http.Request, doAction func(session *model.Session) (interface{}, error)) {
-	sessionToken := a.getSessionToken(r)
-	if sessionToken == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte("missing required header: x-session-token"))
-		return
-	}
-	session, err := a.getSession(sessionToken)
-	if err != nil {
-		log.Print("FAILED! Either error, or Uuid mismatch :: ", err)
-		err := errors.New("invalid session")
-		w.WriteHeader(http.StatusForbidden)
-		_, _ = w.Write([]byte(err.Error()))
-		return
-	}
-	object, err := doAction(session)
-	util.WriteResponse(w, object, err)
 }
 
 func (a *AuthService) getSession(sessionId string) (*model.Session, error) {

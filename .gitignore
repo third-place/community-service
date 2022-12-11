@@ -20,5 +20,5 @@ build/
 # intellij
 .idea/
 postgres-data/
-
 community-service
+vendor/

@@ -147,8 +147,8 @@ func (p *PostService) GetAllPosts(limit int) []*model.Post {
 	return mapper.GetPostModelsFromEntities(posts)
 }
 
-func (p *PostService) GetDraftPosts(username string, limit int) []*model.Post {
-	user, _ := p.userRepository.FindOneByUsername(username)
+func (p *PostService) GetDraftPosts(sessionUuid uuid.UUID, limit int) []*model.Post {
+	user, _ := p.userRepository.FindOneByUuid(sessionUuid)
 	posts := p.postRepository.FindDraftsByUser(user, limit)
 	return mapper.GetPostModelsFromEntities(posts)
 }

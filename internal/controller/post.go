@@ -95,7 +95,7 @@ func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	posts := service.CreatePostService().GetDraftPosts(
-		session.User.Username,
+		uuid.MustParse(session.User.Uuid),
 		constants.UserPostsDefaultPageSize,
 	)
 	data, _ := json.Marshal(posts)

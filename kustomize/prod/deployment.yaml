@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: otto-community-service
-          image: ghcr.io/third-place/community-service:v0.1.11
+          image: ghcr.io/third-place/community-service:v0.1.12
           imagePullPolicy: Always
           ports:
             - containerPort: 8081

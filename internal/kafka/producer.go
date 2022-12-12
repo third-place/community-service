@@ -3,6 +3,7 @@ package kafka
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"log"
 	"os"
 )
 
@@ -25,7 +26,7 @@ func CreateProducer() Producer {
 		"sasl.password":     os.Getenv("KAFKA_SASL_PASSWORD"),
 	})
 	if err != nil {
-		panic(fmt.Sprintf("Failed to create producer: %s", err))
+		log.Fatal(fmt.Sprintf("Failed to create producer: %s", err))
 	}
 	return producer
 }

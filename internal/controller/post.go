@@ -58,8 +58,8 @@ func GetPostV1(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(data)
 }
 
-// GetUserFollowsPostsV1 - get a user's friend's posts
-func GetUserFollowsPostsV1(w http.ResponseWriter, r *http.Request) {
+// GetPostsForUserFollowsV1 - get a user's friend's posts
+func GetPostsForUserFollowsV1(w http.ResponseWriter, r *http.Request) {
 	limit := constants.UserPostsDefaultPageSize
 	params := mux.Vars(r)
 	username := params["username"]

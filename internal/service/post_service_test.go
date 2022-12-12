@@ -267,7 +267,7 @@ func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	}
 
 	// when -- bob gets posts from people he follows
-	posts, err := svc.GetPostsForUserFollows(*bob.Uuid, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsForUserFollows(bob.Username, *bob.Uuid, constants.UserPostsDefaultPageSize)
 
 	// then -- expect to see posts from alice
 	test.Assert(t, err == nil)

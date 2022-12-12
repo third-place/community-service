@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
-	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/test"
 	"github.com/third-place/community-service/internal/util"
@@ -12,15 +11,11 @@ import (
 
 const message = "this is a test"
 
-func createTestUser() *entity.User {
-	return CreateTestUserService().CreateUser(util.CreateTestUser())
-}
-
 func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
-	testUser := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// when
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
@@ -33,16 +28,16 @@ func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 
 func Test_PostService_CreateNewPost_WithPrivateVisibility(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// given
 	newPost := model.CreateNewPost(message)
 	newPost.Visibility = model.PRIVATE
 
 	// when
-	response, err := postService.CreatePost(session, newPost)
+	response, err := svc.CreatePost(session, newPost)
 
 	// then
 	test.Assert(t, err == nil)
@@ -51,15 +46,15 @@ func Test_PostService_CreateNewPost_WithPrivateVisibility(t *testing.T) {
 
 func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 	newPost := model.CreateNewPost(message)
 	newPost.Visibility = model.PRIVATE
-	response, err := postService.CreatePost(session, newPost)
+	response, err := svc.CreatePost(session, newPost)
 
 	// when
-	post, err := postService.GetPost(nil, uuid.MustParse(response.Uuid))
+	post, err := svc.GetPost(nil, uuid.MustParse(response.Uuid))
 
 	// then
 	test.Assert(t, post == nil)
@@ -68,16 +63,16 @@ func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 
 func Test_PostService_CreateNewPost_WithFollowingVisibility(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// given
 	newPost := model.CreateNewPost(message)
 	newPost.Visibility = model.FOLLOWING
 
 	// when
-	response, err := postService.CreatePost(session, newPost)
+	response, err := svc.CreatePost(session, newPost)
 
 	// then
 	test.Assert(t, err == nil)
@@ -86,22 +81,22 @@ func Test_PostService_CreateNewPost_WithFollowingVisibility(t *testing.T) {
 
 func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
 	// setup
-	testUser1 := createTestUser()
-	session1 := model.CreateSessionModelFromString(*testUser1.Uuid)
-	testUser2 := createTestUser()
-	session2 := model.CreateSessionModelFromString(*testUser2.Uuid)
-	testUser3 := createTestUser()
-	session3 := model.CreateSessionModelFromString(*testUser3.Uuid)
-	_, _ = CreateFollowService().CreateFollow(
-		*testUser1.Uuid, &model.NewFollow{Following: model.User{Uuid: testUser2.Uuid.String()}})
-	postService := CreatePostService()
+	svc := CreateTestService()
+	user1 := svc.CreateUser(util.CreateTestUser())
+	session1 := model.CreateSessionModelFromString(*user1.Uuid)
+	user2 := svc.CreateUser(util.CreateTestUser())
+	session2 := model.CreateSessionModelFromString(*user2.Uuid)
+	user3 := svc.CreateUser(util.CreateTestUser())
+	session3 := model.CreateSessionModelFromString(*user3.Uuid)
+	_, _ = svc.CreateFollow(
+		*user1.Uuid, &model.NewFollow{Following: model.User{Uuid: user2.Uuid.String()}})
 	newPost := model.CreateNewPost(message)
 	newPost.Visibility = model.FOLLOWING
-	response, _ := postService.CreatePost(session1, newPost)
+	response, _ := svc.CreatePost(session1, newPost)
 
 	// when
-	post1, err1 := postService.GetPost(session2, uuid.MustParse(response.Uuid))
-	post2, err2 := postService.GetPost(session3, uuid.MustParse(response.Uuid))
+	post1, err1 := svc.GetPost(session2, uuid.MustParse(response.Uuid))
+	post2, err2 := svc.GetPost(session3, uuid.MustParse(response.Uuid))
 
 	// then
 	test.Assert(t, post1 != nil)
@@ -113,12 +108,12 @@ func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
 
 func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
 	// setup
+	svc := CreateTestService()
 	userUuid, _ := uuid.NewRandom()
 	session := model.CreateSessionModelFromString(userUuid)
-	postService := CreatePostService()
 
 	// when
-	response, err := postService.CreatePost(session, model.CreateNewPost(message))
+	response, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// then
 	test.Assert(t, err != nil)
@@ -127,13 +122,13 @@ func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
 
 func Test_PostService_Can_DeletePost(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
-	postModel, _ := postService.CreatePost(session, model.CreateNewPost(message))
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
+	postModel, _ := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// when
-	err := postService.DeletePost(session, uuid.MustParse(postModel.Uuid))
+	err := svc.DeletePost(session, uuid.MustParse(postModel.Uuid))
 
 	// then
 	test.Assert(t, err == nil)
@@ -141,14 +136,14 @@ func Test_PostService_Can_DeletePost(t *testing.T) {
 
 func Test_PostService_CannotGet_DeletedPost(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
-	postModel, _ := postService.CreatePost(session, model.CreateNewPost(message))
-	_ = postService.DeletePost(session, uuid.MustParse(postModel.Uuid))
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
+	postModel, _ := svc.CreatePost(session, model.CreateNewPost(message))
+	_ = svc.DeletePost(session, uuid.MustParse(postModel.Uuid))
 
 	// when
-	response, err := postService.GetPost(nil, uuid.MustParse(postModel.Uuid))
+	response, err := svc.GetPost(nil, uuid.MustParse(postModel.Uuid))
 
 	// then
 	test.Assert(t, err != nil)
@@ -157,11 +152,11 @@ func Test_PostService_CannotGet_DeletedPost(t *testing.T) {
 
 func Test_GetPosts(t *testing.T) {
 	// setup
-	postService := CreatePostService()
-	testUser := createTestUser()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
 
 	// when
-	posts, err := postService.GetPostsFirehose(&testUser.Username, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsFirehose(&user.Username, constants.UserPostsDefaultPageSize)
 
 	// then
 	test.Assert(t, err == nil)
@@ -170,10 +165,10 @@ func Test_GetPosts(t *testing.T) {
 
 func Test_GetPosts_NoSession(t *testing.T) {
 	// setup
-	postService := CreatePostService()
+	svc := CreateTestService()
 
 	// when
-	posts, err := postService.GetPostsFirehose(nil, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsFirehose(nil, constants.UserPostsDefaultPageSize)
 
 	// then
 	test.Assert(t, err == nil)
@@ -182,19 +177,19 @@ func Test_GetPosts_NoSession(t *testing.T) {
 
 func Test_GetPost(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// given
-	post, err := postService.CreatePost(session, model.CreateNewPost(message))
+	post, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// expect
 	test.Assert(t, post != nil)
 	test.Assert(t, err == nil)
 
 	// when
-	response, err := postService.GetPost(nil, uuid.MustParse(post.Uuid))
+	response, err := svc.GetPost(nil, uuid.MustParse(post.Uuid))
 
 	// then
 	test.Assert(t, err == nil)
@@ -203,10 +198,10 @@ func Test_GetPost(t *testing.T) {
 
 func Test_GetPost_Fails_WhenNotFound(t *testing.T) {
 	// setup
-	postService := CreatePostService()
+	svc := CreateTestService()
 
 	// when
-	post, err := postService.GetPost(nil, uuid.New())
+	post, err := svc.GetPost(nil, uuid.New())
 
 	// then
 	test.Assert(t, err != nil)
@@ -215,17 +210,17 @@ func Test_GetPost_Fails_WhenNotFound(t *testing.T) {
 
 func Test_PostService_GetUserPosts(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := CreatePostService()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// given
 	for i := 0; i < 5; i++ {
-		_, _ = postService.CreatePost(session, model.CreateNewPost(message))
+		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
 	}
 
 	// when
-	posts, _ := postService.GetPostsForUser(testUser.Username, nil, constants.UserPostsDefaultPageSize)
+	posts, _ := svc.GetPostsForUser(user.Username, nil, constants.UserPostsDefaultPageSize)
 
 	// then
 	test.Assert(t, len(posts) == 5)
@@ -233,20 +228,20 @@ func Test_PostService_GetUserPosts(t *testing.T) {
 
 func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	// setup
+	svc := CreateTestService()
 	testUserUuid, _ := uuid.NewRandom()
 	session := model.CreateSessionModelFromString(testUserUuid)
-	postService := CreatePostService()
 
 	// given
 	for i := 0; i < 5; i++ {
-		_, _ = postService.CreatePost(
+		_, _ = svc.CreatePost(
 			session,
 			model.CreateNewPost(message),
 		)
 	}
 
 	// when
-	posts, err := postService.GetPostsForUser(testUserUuid.String(), nil, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsForUser(testUserUuid.String(), nil, constants.UserPostsDefaultPageSize)
 
 	// then
 	test.Assert(t, posts == nil)
@@ -255,23 +250,22 @@ func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 
 func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	following := createTestUser()
-	postService := CreatePostService()
-	followService := CreateFollowService()
-	_, _ = followService.CreateFollow(
-		*testUser.Uuid,
-		&model.NewFollow{Following: model.User{Uuid: following.Uuid.String()}},
+	svc := CreateTestService()
+	user1 := svc.CreateUser(util.CreateTestUser())
+	user2 := svc.CreateUser(util.CreateTestUser())
+	_, _ = svc.CreateFollow(
+		*user1.Uuid,
+		&model.NewFollow{Following: model.User{Uuid: user2.Uuid.String()}},
 	)
-	session := model.CreateSessionModelFromString(*following.Uuid)
+	session := model.CreateSessionModelFromString(*user2.Uuid)
 
 	// given
 	for i := 0; i < 5; i++ {
-		_, _ = postService.CreatePost(session, model.CreateNewPost(message))
+		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
 	}
 
 	// when
-	posts, err := postService.GetPostsForUserFollows(testUser.Username, *testUser.Uuid, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsForUserFollows(user1.Username, *user1.Uuid, constants.UserPostsDefaultPageSize)
 
 	// then
 	test.Assert(t, err == nil)

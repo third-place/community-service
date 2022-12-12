@@ -11,6 +11,7 @@ import (
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/util"
 	"log"
 	"time"
 )
@@ -27,6 +28,19 @@ func CreateFollowService() *FollowService {
 		repository.CreateUserRepository(conn),
 		repository.CreateFollowRepository(conn),
 		kafka2.CreateProducer(),
+	}
+}
+
+func CreateTestFollowService() *FollowService {
+	conn := util.SetupTestDatabase()
+	producer, err := kafka2.CreateTestProducer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &FollowService{
+		repository.CreateUserRepository(conn),
+		repository.CreateFollowRepository(conn),
+		producer,
 	}
 }
 

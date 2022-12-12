@@ -88,8 +88,7 @@ func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
 	session2 := model.CreateSessionModelFromString(*user2.Uuid)
 	user3 := svc.CreateUser(util.CreateTestUser())
 	session3 := model.CreateSessionModelFromString(*user3.Uuid)
-	_, _ = svc.CreateFollow(
-		*user1.Uuid, &model.NewFollow{Following: model.User{Uuid: user2.Uuid.String()}})
+	_, _ = svc.CreateFollow(*user1.Uuid, *user2.Uuid)
 	newPost := model.CreateNewPost(message)
 	newPost.Visibility = model.FOLLOWING
 	response, _ := svc.CreatePost(session1, newPost)
@@ -255,13 +254,10 @@ func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	alice := svc.CreateUser(util.CreateTestUser())
 
 	// given -- bob follows alice
-	_, _ = svc.CreateFollow(
-		*bob.Uuid,
-		&model.NewFollow{Following: model.User{Uuid: alice.Uuid.String()}},
-	)
-	session := model.CreateSessionModelFromString(*alice.Uuid)
+	_, _ = svc.CreateFollow(*bob.Uuid, *alice.Uuid)
 
 	// given -- alice creates some posts
+	session := model.CreateSessionModelFromString(*alice.Uuid)
 	for i := 0; i < 5; i++ {
 		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
 	}

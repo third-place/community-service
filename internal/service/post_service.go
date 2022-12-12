@@ -147,8 +147,8 @@ func (p *PostService) GetPostsForUser(username string, viewerUuid *uuid.UUID, li
 	return fullListModels, nil
 }
 
-func (p *PostService) GetPostsForUserFollows(usernameOfFriends string, viewerUserUuid uuid.UUID, limit int) ([]*model.Post, error) {
-	userWithFriends, err := p.userRepository.FindOneByUsername(usernameOfFriends)
+func (p *PostService) GetPostsForUserFollows(usernameFollowing string, viewerUserUuid uuid.UUID, limit int) ([]*model.Post, error) {
+	_, err := p.userRepository.FindOneByUsername(usernameFollowing)
 	if err != nil {
 		return nil, err
 	}
@@ -156,8 +156,9 @@ func (p *PostService) GetPostsForUserFollows(usernameOfFriends string, viewerUse
 	if err != nil {
 		return nil, err
 	}
-	posts := p.populateSharePosts(p.postRepository.FindByUserFollows(userWithFriends.Uuid.String(), limit))
-	postModels := p.populateModelsWithLikes(posts, viewer)
+	posts := p.postRepository.FindByUserFollows(usernameFollowing, limit)
+	postsWithShares := p.populateSharePosts(posts)
+	postModels := p.populateModelsWithLikes(postsWithShares, viewer)
 	return postModels, nil
 }
 

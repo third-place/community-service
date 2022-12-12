@@ -44,10 +44,21 @@ func (t *TestService) GetPostsForUser(username string, viewerUuid *uuid.UUID, li
 	return t.postService.GetPostsForUser(username, viewerUuid, limit)
 }
 
-func (t *TestService) CreateFollow(sessionUserUuid uuid.UUID, follow *model.NewFollow) (*model.Follow, error) {
-	return t.followService.CreateFollow(sessionUserUuid, follow)
+func (t *TestService) CreateFollow(sessionUserUuid uuid.UUID, followUuid uuid.UUID) (*model.Follow, error) {
+	return t.followService.CreateFollow(
+		sessionUserUuid,
+		&model.NewFollow{Following: model.User{Uuid: followUuid.String()}},
+	)
 }
 
 func (t *TestService) GetPostsForUserFollows(username string, viewerUserUuid uuid.UUID, limit int) ([]*model.Post, error) {
 	return t.postService.GetPostsForUserFollows(username, viewerUserUuid, limit)
+}
+
+func (t *TestService) GetUserFollows(username string) ([]*model.Follow, error) {
+	return t.followService.GetUserFollows(username)
+}
+
+func (t *TestService) GetUserFollowers(username string) ([]*model.Follow, error) {
+	return t.followService.GetUserFollowers(username)
 }

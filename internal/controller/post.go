@@ -112,7 +112,7 @@ func GetPostsFirehoseV1(w http.ResponseWriter, r *http.Request) {
 	}
 	var viewerUsername string
 	if session != nil {
-		viewerUser, _ := service.CreateDefaultUserService().GetUser(uuid.MustParse(session.User.Uuid))
+		viewerUser, _ := service.CreateUserService().GetUser(uuid.MustParse(session.User.Uuid))
 		viewerUsername = viewerUser.Username
 	}
 	limit := constants.UserPostsDefaultPageSize

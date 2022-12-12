@@ -2,35 +2,27 @@ package util
 
 import (
 	"context"
-	"github.com/goombaio/namegenerator"
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
+	"github.com/third-place/community-service/internal/model"
 	"math/rand"
-	"os"
 	"strconv"
 	"time"
 )
 
-var NameGenerator namegenerator.Generator
 var dbConn *gorm.DB
 
-func init() {
-	seed := time.Now().UTC().UnixNano()
-	NameGenerator = namegenerator.NewNameGenerator(seed)
-}
-
-func RandomUsername() string {
-	return NameGenerator.Generate()
-}
-
-func RandomEmailAddress() string {
-	s := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(s)
-	num := r.Intn(100000)
-	return os.Getenv("EMAIL_PREFIX") + "+" + strconv.Itoa(num) + "@" + os.Getenv("EMAIL_DOMAIN")
+func CreateTestUser() *model.User {
+	rand.Seed(time.Now().UnixNano())
+	randomInt := rand.Int()
+	return &model.User{
+		Uuid:     uuid.New().String(),
+		Username: "user" + strconv.Itoa(randomInt),
+	}
 }
 
 func SetupTestDatabase() *gorm.DB {
@@ -77,5 +69,12 @@ func SetupTestDatabase() *gorm.DB {
 
 func migrateDb(dbConn *gorm.DB) {
 	dbConn.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-	dbConn.AutoMigrate(&entity.User{})
+	dbConn.AutoMigrate(
+		&entity.Follow{},
+		&entity.Image{},
+		&entity.Post{},
+		&entity.PostLike{},
+		&entity.Report{},
+		&entity.User{},
+	)
 }

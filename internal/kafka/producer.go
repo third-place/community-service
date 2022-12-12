@@ -6,7 +6,17 @@ import (
 	"os"
 )
 
-func CreateWriter() *kafka.Producer {
+type Producer interface {
+	Produce(msg *kafka.Message, deliveryChan chan kafka.Event) error
+}
+
+type TestProducer struct{}
+
+func (t *TestProducer) Produce(msg *kafka.Message, deliveryChan chan kafka.Event) error {
+	return nil
+}
+
+func CreateProducer() Producer {
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
 		"security.protocol": os.Getenv("KAFKA_SECURITY_PROTOCOL"),
@@ -18,4 +28,16 @@ func CreateWriter() *kafka.Producer {
 		panic(fmt.Sprintf("Failed to create producer: %s", err))
 	}
 	return producer
+}
+
+func CreateTestProducer() (Producer, error) {
+	return &TestProducer{}, nil
+}
+
+func CreateMessage(data []byte, topic string) *kafka.Message {
+	return &kafka.Message{
+		Value: data,
+		TopicPartition: kafka.TopicPartition{Topic: &topic,
+			Partition: kafka.PartitionAny},
+	}
 }

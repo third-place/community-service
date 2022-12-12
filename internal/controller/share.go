@@ -29,7 +29,7 @@ func GetSharesV1(w http.ResponseWriter, r *http.Request) {
 	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	var viewerUsername string
 	if session != nil {
-		viewerUser, _ := service.CreateDefaultUserService().GetUser(uuid.MustParse(session.User.Uuid))
+		viewerUser, _ := service.CreateUserService().GetUser(uuid.MustParse(session.User.Uuid))
 		viewerUsername = viewerUser.Username
 	}
 	limit := constants.UserPostsDefaultPageSize

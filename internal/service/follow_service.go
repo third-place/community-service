@@ -18,7 +18,7 @@ import (
 type FollowService struct {
 	userRepository   *repository.UserRepository
 	followRepository *repository.FollowRepository
-	kafkaWriter      *kafka.Producer
+	kafkaWriter      kafka2.Producer
 }
 
 func CreateFollowService() *FollowService {
@@ -26,7 +26,7 @@ func CreateFollowService() *FollowService {
 	return &FollowService{
 		repository.CreateUserRepository(conn),
 		repository.CreateFollowRepository(conn),
-		kafka2.CreateWriter(),
+		kafka2.CreateProducer(),
 	}
 }
 

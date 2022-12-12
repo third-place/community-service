@@ -3,15 +3,16 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
-	kafka2 "github.com/third-place/community-service/internal/kafka"
+	"github.com/third-place/community-service/internal/kafka"
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/util"
+	"log"
 	"sort"
 )
 
@@ -21,19 +22,37 @@ type PostService struct {
 	followRepository *repository.FollowRepository
 	imageRepository  *repository.ImageRepository
 	likeRepository   *repository.LikeRepository
-	kafkaWriter      *kafka.Producer
+	kafkaWriter      kafka.Producer
 	securityService  *SecurityService
 }
 
 func CreatePostService() *PostService {
 	conn := db.CreateDefaultConnection()
+	producer := kafka.CreateProducer()
 	return &PostService{
 		postRepository:   repository.CreatePostRepository(conn),
 		userRepository:   repository.CreateUserRepository(conn),
 		followRepository: repository.CreateFollowRepository(conn),
 		imageRepository:  repository.CreateImageRepository(conn),
 		likeRepository:   repository.CreateLikeRepository(conn),
-		kafkaWriter:      kafka2.CreateWriter(),
+		kafkaWriter:      producer,
+		securityService:  CreateSecurityService(),
+	}
+}
+
+func CreateTestPostService() *PostService {
+	conn := util.SetupTestDatabase()
+	producer, err := kafka.CreateTestProducer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &PostService{
+		postRepository:   repository.CreatePostRepository(conn),
+		userRepository:   repository.CreateUserRepository(conn),
+		followRepository: repository.CreateFollowRepository(conn),
+		imageRepository:  repository.CreateImageRepository(conn),
+		likeRepository:   repository.CreateLikeRepository(conn),
+		kafkaWriter:      producer,
 		securityService:  CreateSecurityService(),
 	}
 }
@@ -246,16 +265,7 @@ func (p *PostService) getPostIDs(posts []*entity.Post) []uint {
 func (p *PostService) publishPostToKafka(post *model.Post) error {
 	topic := "posts"
 	data, _ := json.Marshal(post)
-	return p.kafkaWriter.Produce(
-		&kafka.Message{
-			Value: data,
-			TopicPartition: kafka.TopicPartition{
-				Topic:     &topic,
-				Partition: kafka.PartitionAny,
-			},
-		},
-		nil,
-	)
+	return p.kafkaWriter.Produce(kafka.CreateMessage(data, topic), nil)
 }
 
 func (p *PostService) canSee(session *model.Session, post *entity.Post) bool {

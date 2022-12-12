@@ -10,7 +10,7 @@ import (
 
 func Test_CanGetUser(t *testing.T) {
 	// setup
-	userService := service.CreateDefaultUserService()
+	userService := service.CreateUserService()
 	user := userService.CreateUser(test.CreateTestUser())
 
 	// when
@@ -23,7 +23,7 @@ func Test_CanGetUser(t *testing.T) {
 
 func Test_DeleteMissingUser_Fails(t *testing.T) {
 	// setup
-	userService := service.CreateDefaultUserService()
+	userService := service.CreateUserService()
 	userModel := test.CreateTestUser()
 
 	// when
@@ -36,7 +36,7 @@ func Test_DeleteMissingUser_Fails(t *testing.T) {
 
 func Test_Requesting_UserNotFound(t *testing.T) {
 	// setup
-	userService := service.CreateDefaultUserService()
+	userService := service.CreateUserService()
 
 	// when
 	user, err := userService.GetUser(uuid.New())

@@ -7,6 +7,8 @@ import (
 	"testing"
 )
 
+const message = "this is a test"
+
 func Test_ShareService_CanCreate_NewShare(t *testing.T) {
 	// setup
 	testUser := createTestUser()

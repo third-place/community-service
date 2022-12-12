@@ -7,6 +7,7 @@ import (
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/util"
 	"time"
 )
 
@@ -14,13 +15,15 @@ type UserService struct {
 	userRepository *repository.UserRepository
 }
 
-func CreateDefaultUserService() *UserService {
-	return CreateUserService(repository.CreateUserRepository(db.CreateDefaultConnection()))
+func CreateUserService() *UserService {
+	return &UserService{
+		repository.CreateUserRepository(db.CreateDefaultConnection()),
+	}
 }
 
-func CreateUserService(userRepository *repository.UserRepository) *UserService {
+func CreateTestUserService() *UserService {
 	return &UserService{
-		userRepository,
+		repository.CreateUserRepository(util.SetupTestDatabase()),
 	}
 }
 

@@ -10,7 +10,7 @@ import (
 
 func Test_CanFollow_AUser(t *testing.T) {
 	// setup
-	userService := service.CreateDefaultUserService()
+	userService := service.CreateUserService()
 	user1 := userService.CreateUser(test.CreateTestUser())
 	user2 := userService.CreateUser(test.CreateTestUser())
 	followService := service.CreateFollowService()
@@ -28,7 +28,7 @@ func Test_CanFollow_AUser(t *testing.T) {
 
 func Test_GetFollows(t *testing.T) {
 	// setup
-	userService := service.CreateDefaultUserService()
+	userService := service.CreateUserService()
 	user1 := userService.CreateUser(test.CreateTestUser())
 	user2 := userService.CreateUser(test.CreateTestUser())
 	user3 := userService.CreateUser(test.CreateTestUser())
@@ -50,7 +50,7 @@ func Test_GetFollows(t *testing.T) {
 
 func Test_GetFollowers(t *testing.T) {
 	// setup
-	userService := service.CreateDefaultUserService()
+	userService := service.CreateUserService()
 	user1 := userService.CreateUser(test.CreateTestUser())
 	user2 := userService.CreateUser(test.CreateTestUser())
 	user3 := userService.CreateUser(test.CreateTestUser())

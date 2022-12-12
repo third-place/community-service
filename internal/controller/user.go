@@ -23,7 +23,7 @@ func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
 	if session != nil {
 		viewerUuid = uuid.MustParse(session.User.Uuid)
 	}
-	user, err := service.CreateDefaultUserService().GetUserByUsername(username)
+	user, err := service.CreateUserService().GetUserByUsername(username)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -77,7 +77,7 @@ func GetUserPostsV1(w http.ResponseWriter, r *http.Request) {
 
 // GetSuggestedFollowsForUserV1 - Get suggested follows for user
 func GetSuggestedFollowsForUserV1(w http.ResponseWriter, r *http.Request) {
-	users := service.CreateDefaultUserService().
+	users := service.CreateUserService().
 		GetSuggestedFollowsForUser(uuid2.GetUuidFromPathSecondPosition(r.URL.Path))
 	data, _ := json.Marshal(users)
 	_, _ = w.Write(data)

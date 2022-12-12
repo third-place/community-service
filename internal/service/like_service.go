@@ -16,7 +16,7 @@ type LikeService struct {
 	likeRepository *repository.LikeRepository
 	postRepository *repository.PostRepository
 	userRepository *repository.UserRepository
-	kafkaWriter    *kafka.Producer
+	kafkaWriter    kafka2.Producer
 }
 
 func CreateDefaultLikeService() *LikeService {
@@ -25,7 +25,7 @@ func CreateDefaultLikeService() *LikeService {
 		likeRepository: repository.CreateLikeRepository(conn),
 		postRepository: repository.CreatePostRepository(conn),
 		userRepository: repository.CreateUserRepository(conn),
-		kafkaWriter:    kafka2.CreateWriter(),
+		kafkaWriter:    kafka2.CreateProducer(),
 	}
 }
 

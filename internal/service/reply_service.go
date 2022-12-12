@@ -18,7 +18,7 @@ type ReplyService struct {
 	postRepository  *repository.PostRepository
 	replyRepository *repository.ReplyRepository
 	securityService *SecurityService
-	kafkaWriter     *kafka.Producer
+	kafkaWriter     kafka2.Producer
 }
 
 func CreateReplyService() *ReplyService {
@@ -28,7 +28,7 @@ func CreateReplyService() *ReplyService {
 		repository.CreatePostRepository(conn),
 		repository.CreateReplyRepository(conn),
 		&SecurityService{},
-		kafka2.CreateWriter(),
+		kafka2.CreateProducer(),
 	}
 }
 

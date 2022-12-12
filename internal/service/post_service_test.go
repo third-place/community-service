@@ -251,23 +251,25 @@ func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	// setup
 	svc := CreateTestService()
-	user1 := svc.CreateUser(util.CreateTestUser())
-	user2 := svc.CreateUser(util.CreateTestUser())
-	_, _ = svc.CreateFollow(
-		*user1.Uuid,
-		&model.NewFollow{Following: model.User{Uuid: user2.Uuid.String()}},
-	)
-	session := model.CreateSessionModelFromString(*user2.Uuid)
+	bob := svc.CreateUser(util.CreateTestUser())
+	alice := svc.CreateUser(util.CreateTestUser())
 
-	// given
+	// given -- bob follows alice
+	_, _ = svc.CreateFollow(
+		*bob.Uuid,
+		&model.NewFollow{Following: model.User{Uuid: alice.Uuid.String()}},
+	)
+	session := model.CreateSessionModelFromString(*alice.Uuid)
+
+	// given -- alice creates some posts
 	for i := 0; i < 5; i++ {
 		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
 	}
 
-	// when
-	posts, err := svc.GetPostsForUserFollows(user1.Username, *user1.Uuid, constants.UserPostsDefaultPageSize)
+	// when -- bob gets posts from people he follows
+	posts, err := svc.GetPostsForUserFollows(*bob.Uuid, constants.UserPostsDefaultPageSize)
 
-	// then
+	// then -- expect to see posts from alice
 	test.Assert(t, err == nil)
 	test.Assert(t, len(posts) >= 5)
 }

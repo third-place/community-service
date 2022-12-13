@@ -4,33 +4,31 @@ import (
 	"encoding/json"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
-	"github.com/third-place/community-service/internal/db"
-	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
-	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/service"
 	"log"
 )
 
 func InitializeAndRunLoop() {
-	userRepository := repository.CreateUserRepository(db.CreateDefaultConnection())
-	loopKafkaReader(userRepository)
+	loopKafkaReader()
 }
 
-func loopKafkaReader(userRepository *repository.UserRepository) {
+func loopKafkaReader() {
 	reader, err := GetReader()
+	userService := service.CreateUserService()
 	if err != nil {
 		return
 	}
 	log.Print("listening for kafka messages")
 	for {
-		ev := reader.Poll(60000)
+		ev := reader.Poll(-1)
 		switch e := ev.(type) {
 		case *kafka.Message:
 			log.Printf("message received on topic :: %s, data :: %s", e.TopicPartition.String(), string(e.Value))
 			if *e.TopicPartition.Topic == "users" {
-				readUser(userRepository, e.Value)
+				readUser(userService, e.Value)
 			} else if *e.TopicPartition.Topic == "images" {
-				updateUserImage(userRepository, e.Value)
+				updateUserImage(userService, e.Value)
 			}
 		case kafka.Error:
 			log.Print("Error :: ", e)
@@ -39,23 +37,22 @@ func loopKafkaReader(userRepository *repository.UserRepository) {
 	}
 }
 
-func updateUserImage(userRepository *repository.UserRepository, data []byte) {
+func updateUserImage(userService *service.UserService, data []byte) {
 	result := decodeToMap(data)
 	user := result["user"].(map[string]interface{})
 	userUuid := user["uuid"].(string)
 	s3Key := result["s3_key"].(string)
 	log.Print("update user profile pic :: {}, {}, {}", userUuid, s3Key, result)
-	userEntity, err := userRepository.FindOneByUuid(uuid.MustParse(userUuid))
+	userModel, err := userService.GetUser(uuid.MustParse(userUuid))
 	if err != nil {
 		log.Print("user not found when updating profile pic")
 		return
 	}
-	log.Print("update user with s3 key", userEntity.Uuid.String(), s3Key)
-	userEntity.ProfilePic = s3Key
-	userRepository.Save(userEntity)
+	userModel.ProfilePic = s3Key
+	userService.UpsertUser(userModel)
 }
 
-func readUser(userRepository *repository.UserRepository, data []byte) {
+func readUser(userService *service.UserService, data []byte) {
 	log.Print("consuming user message ", string(data))
 	userModel, err := model.DecodeMessageToUser(data)
 	if err != nil {
@@ -66,14 +63,7 @@ func readUser(userRepository *repository.UserRepository, data []byte) {
 	if err != nil {
 		return
 	}
-	userEntity, err := userRepository.FindOneByUuid(uuid.MustParse(userModel.Uuid))
-	if err == nil {
-		userEntity.UpdateUserProfileFromModel(userModel)
-		userRepository.Save(userEntity)
-	} else {
-		userEntity = mapper.GetUserEntityFromModel(userModel)
-		userRepository.Create(userEntity)
-	}
+	userService.UpsertUser(userModel)
 }
 
 func decodeToMap(data []byte) map[string]interface{} {

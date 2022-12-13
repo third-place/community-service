@@ -52,6 +52,17 @@ func (s *UserService) GetUser(userUuid uuid.UUID) (*model.User, error) {
 	return mapper.GetUserModelFromEntity(userEntity), nil
 }
 
+func (s *UserService) UpsertUser(userModel *model.User) {
+	userEntity, err := s.userRepository.FindOneByUuid(uuid.MustParse(userModel.Uuid))
+	if err == nil {
+		userEntity.UpdateUserProfileFromModel(userModel)
+		s.userRepository.Save(userEntity)
+	} else {
+		userEntity = mapper.GetUserEntityFromModel(userModel)
+		s.userRepository.Create(userEntity)
+	}
+}
+
 func (s *UserService) GetUserByUsername(username string) (*model.User, error) {
 	userEntity, err := s.userRepository.FindOneByUsername(username)
 	if err != nil {

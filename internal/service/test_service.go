@@ -50,8 +50,8 @@ func (t *TestService) DeletePost(session *model.Session, postUuid uuid.UUID) err
 	return t.postService.DeletePost(session, postUuid)
 }
 
-func (t *TestService) GetPostsFirehose(username *string, limit int) ([]*model.Post, error) {
-	return t.postService.GetPostsFirehose(username, limit)
+func (t *TestService) GetPostsFirehose(session *model.Session, limit int) ([]*model.Post, error) {
+	return t.postService.GetPostsFirehose(session, limit)
 }
 
 func (t *TestService) GetPostsForUser(session *model.Session, username string, limit int) ([]*model.Post, error) {

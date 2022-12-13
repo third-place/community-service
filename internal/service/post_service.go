@@ -61,7 +61,7 @@ func (p *PostService) GetPost(session *model.Session, postUuid uuid.UUID) (*mode
 	if post.User == nil {
 		return nil, errors.New(constants.ErrorMessageUserNotFound)
 	}
-	if !p.canSee(session, post) {
+	if !p.canSeePost(session, post) {
 		return nil, errors.New("not accessible")
 	}
 	posts := make([]*entity.Post, 1)
@@ -121,7 +121,9 @@ func (p *PostService) GetPostsForUser(session *model.Session, usernameOfPosts st
 	if err != nil {
 		return nil, err
 	}
-	postEntities := p.populateSharePosts(p.postRepository.FindPublishedByUser(userOfPosts, limit))
+	postEntities := p.postRepository.FindPublishedByUser(userOfPosts, limit)
+	postEntities = p.filterPostsForVisibility(session, postEntities)
+	postEntities = p.populateSharePosts(postEntities)
 	var fullListModels []*model.Post
 	var viewer *entity.User
 	if session != nil {
@@ -145,39 +147,32 @@ func (p *PostService) GetPostsForUserFollows(session *model.Session, usernameFol
 		return nil, err
 	}
 	posts := p.postRepository.FindByUserFollows(usernameFollowing, limit)
+	posts = p.filterPostsForVisibility(session, posts)
 	postsWithShares := p.populateSharePosts(posts)
 	postModels := p.populateModelsWithLikes(postsWithShares, viewer)
 	return postModels, nil
 }
 
-func (p *PostService) GetAllPosts(limit int) []*model.Post {
-	posts := p.postRepository.FindAll(limit)
-	return mapper.GetPostModelsFromEntities(posts)
-}
-
 func (p *PostService) GetDraftPosts(session *model.Session, limit int) []*model.Post {
 	user, _ := p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
 	posts := p.postRepository.FindDraftsByUser(user, limit)
+	posts = p.filterPostsForVisibility(session, posts)
 	return mapper.GetPostModelsFromEntities(posts)
 }
 
-func (p *PostService) GetPosts(username string, limit int) []*model.Post {
-	user, _ := p.userRepository.FindOneByUsername(username)
-	posts := p.postRepository.FindPublishedByUser(user, limit)
-	return mapper.GetPostModelsFromEntities(posts)
-}
-
-func (p *PostService) GetPostsFirehose(username *string, limit int) ([]*model.Post, error) {
+func (p *PostService) GetPostsFirehose(session *model.Session, limit int) ([]*model.Post, error) {
 	var selfPosts []*entity.Post
 	var followingPosts []*entity.Post
 	var publicPosts []*entity.Post
-	var user *entity.User
-	if username != nil {
-		followingPosts = p.postRepository.FindByUserFollows(*username, limit)
-		limit -= len(followingPosts)
+	user, err := p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
+	if err != nil {
+		return nil, err
 	}
-	if limit > 0 && username != nil {
-		user, _ = p.userRepository.FindOneByUsername(*username)
+	username := user.Username
+	followingPosts = p.postRepository.FindByUserFollows(username, limit)
+	limit -= len(followingPosts)
+	if limit > 0 {
+		user, _ = p.userRepository.FindOneByUsername(username)
 		selfPosts = p.postRepository.FindPublishedByUser(user, limit)
 		limit -= len(selfPosts)
 	}
@@ -186,6 +181,7 @@ func (p *PostService) GetPostsFirehose(username *string, limit int) ([]*model.Po
 	}
 	allPosts := append(selfPosts, followingPosts...)
 	allPosts = append(allPosts, publicPosts...)
+	allPosts = p.filterPostsForVisibility(session, allPosts)
 	sort.SliceStable(allPosts, func(i, j int) bool {
 		return allPosts[i].CreatedAt.After(allPosts[j].CreatedAt)
 	})
@@ -196,12 +192,13 @@ func (p *PostService) GetPostsFirehose(username *string, limit int) ([]*model.Po
 	return mapper.GetPostModelsFromEntities(fullList), nil
 }
 
-func (p *PostService) GetLikedPosts(username string, limit int) ([]*model.Post, error) {
+func (p *PostService) GetLikedPosts(session *model.Session, username string, limit int) ([]*model.Post, error) {
 	user, err := p.userRepository.FindOneByUsername(username)
 	if err != nil {
 		return nil, err
 	}
 	posts := p.postRepository.FindByLikes(user, limit)
+	posts = p.filterPostsForVisibility(session, posts)
 	models := mapper.GetPostModelsFromEntities(p.populateSharePosts(posts))
 	for _, m := range models {
 		m.SelfLiked = true
@@ -257,7 +254,7 @@ func (p *PostService) publishPostToKafka(post *model.Post) error {
 	return p.kafkaWriter.Produce(kafka.CreateMessage(data, topic), nil)
 }
 
-func (p *PostService) canSee(session *model.Session, post *entity.Post) bool {
+func (p *PostService) canSeePost(session *model.Session, post *entity.Post) bool {
 	if p.securityService.Owns(session, post) {
 		return true
 	}
@@ -270,6 +267,16 @@ func (p *PostService) canSee(session *model.Session, post *entity.Post) bool {
 		return follow != nil
 	}
 	return true
+}
+
+func (p *PostService) filterPostsForVisibility(session *model.Session, unfilteredPosts []*entity.Post) []*entity.Post {
+	var posts []*entity.Post
+	for _, post := range unfilteredPosts {
+		if p.canSeePost(session, post) {
+			posts = append(posts, post)
+		}
+	}
+	return posts
 }
 
 func removeDuplicatePosts(posts []*entity.Post) []*entity.Post {

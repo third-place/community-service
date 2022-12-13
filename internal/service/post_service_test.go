@@ -99,21 +99,10 @@ func Test_GetPosts(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// when
-	posts, err := svc.GetPostsFirehose(&user.Username, constants.UserPostsDefaultPageSize)
-
-	// then
-	util.Assert(t, err == nil)
-	util.Assert(t, posts != nil)
-}
-
-func Test_GetPosts_NoSession(t *testing.T) {
-	// setup
-	svc := CreateTestService()
-
-	// when
-	posts, err := svc.GetPostsFirehose(nil, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsFirehose(session, constants.UserPostsDefaultPageSize)
 
 	// then
 	util.Assert(t, err == nil)

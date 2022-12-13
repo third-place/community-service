@@ -94,14 +94,9 @@ func GetPostsFirehoseV1(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	var viewerUsername string
-	if session != nil {
-		viewerUser, _ := service.CreateUserService().GetUser(uuid.MustParse(session.User.Uuid))
-		viewerUsername = viewerUser.Username
-	}
 	limit := constants.UserPostsDefaultPageSize
 	var posts []*model.Post
-	posts, _ = service.CreatePostService().GetPostsFirehose(&viewerUsername, limit)
+	posts, _ = service.CreatePostService().GetPostsFirehose(session, limit)
 	data, _ := json.Marshal(posts)
 	_, _ = w.Write(data)
 }

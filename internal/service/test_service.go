@@ -26,6 +26,14 @@ func (t *TestService) CreateUser(user *model.User) *entity.User {
 	return t.userService.CreateUser(user)
 }
 
+func (t *TestService) GetUser(userUuid uuid.UUID) (*model.User, error) {
+	return t.userService.GetUser(userUuid)
+}
+
+func (t *TestService) DeleteUser(userUuid uuid.UUID) error {
+	return t.userService.DeleteUser(userUuid)
+}
+
 func (t *TestService) CreatePost(session *model.Session, newPost *model.NewPost) (*model.Post, error) {
 	return t.postService.CreatePost(session, newPost)
 }

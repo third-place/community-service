@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
-	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/test"
 	"github.com/third-place/community-service/internal/util"
@@ -11,10 +10,6 @@ import (
 )
 
 const NumberOfRepliesToCreate = 5
-
-func createTestUser() *entity.User {
-	return CreateUserService().CreateUser(test.CreateTestUser())
-}
 
 func createReplyModel(post *model.Post) *model.NewReply {
 	return &model.NewReply{

@@ -116,14 +116,6 @@ func (p *PostService) DeletePost(session *model.Session, postUuid uuid.UUID) err
 	return nil
 }
 
-func (p *PostService) GetNewPosts(username string, limit int) []*model.Post {
-	user, _ := p.userRepository.FindOneByUsername(username)
-	followPosts := p.postRepository.FindByUserFollows(username, limit)
-	userPosts := p.postRepository.FindPublishedByUser(user, limit)
-	allPosts := append(followPosts, userPosts...)
-	return mapper.GetPostModelsFromEntities(p.populateSharePosts(removeDuplicatePosts(allPosts)))
-}
-
 func (p *PostService) GetPostsForUser(username string, viewerUuid *uuid.UUID, limit int) ([]*model.Post, error) {
 	user, err := p.userRepository.FindOneByUsername(username)
 	if err != nil {

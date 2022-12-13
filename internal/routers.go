@@ -182,12 +182,6 @@ var routes = Routes{
 		controller.GetUserPostsV1,
 	},
 	{
-		"GetNewPostsV1",
-		strings.ToUpper("Get"),
-		"/new-posts/{username}",
-		controller.GetNewPostsV1,
-	},
-	{
 		"UpdatePostV1",
 		strings.ToUpper("Put"),
 		"/post",

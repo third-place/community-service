@@ -365,26 +365,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Post"
-  /new-posts/{username}:
-    get:
-      operationId: getNewPostsV1
-      summary: get new posts
-      parameters:
-        - in: path
-          name: username
-          description: a username
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: New posts
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Post"
   /follows/{username}:
     get:
       operationId: getUserFollowsV1

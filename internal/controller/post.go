@@ -77,15 +77,6 @@ func GetPostsForUserFollowsV1(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(data)
 }
 
-func GetNewPostsV1(w http.ResponseWriter, r *http.Request) {
-	limit := constants.UserPostsDefaultPageSize
-	params := mux.Vars(r)
-	username := params["username"]
-	posts := service.CreatePostService().GetNewPosts(username, limit)
-	data, _ := json.Marshal(posts)
-	_, _ = w.Write(data)
-}
-
 // GetDraftPostsV1 - get draft posts
 func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")

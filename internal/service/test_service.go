@@ -12,6 +12,7 @@ type TestService struct {
 	replyService  *ReplyService
 	followService *FollowService
 	reportService *ReportService
+	ShareService  *ShareService
 }
 
 func CreateTestService() *TestService {
@@ -21,6 +22,7 @@ func CreateTestService() *TestService {
 		CreateTestReplyService(),
 		CreateTestFollowService(),
 		CreateTestReportService(),
+		CreateTestShareService(),
 	}
 }
 
@@ -89,4 +91,8 @@ func (t *TestService) CreatePostReport(newReport *model.NewPostReport) (*model.P
 
 func (t *TestService) CreateReplyReport(newReport *model.NewPostReport) (*model.PostReport, error) {
 	return t.reportService.CreateReplyReport(newReport)
+}
+
+func (t *TestService) CreateShare(share *model.NewShare) (*model.Share, error) {
+	return t.ShareService.CreateShare(share)
 }

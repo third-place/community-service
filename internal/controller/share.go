@@ -15,7 +15,7 @@ import (
 func GetShareV1(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	uuidParam := uuid.MustParse(params["uuid"])
-	share, err := service.CreateDefaultShareService().GetShare(uuidParam)
+	share, err := service.CreateShareService().GetShare(uuidParam)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -33,7 +33,7 @@ func GetSharesV1(w http.ResponseWriter, r *http.Request) {
 		viewerUsername = viewerUser.Username
 	}
 	limit := constants.UserPostsDefaultPageSize
-	share, err := service.CreateDefaultShareService().GetShares(&viewerUsername, limit)
+	share, err := service.CreateShareService().GetShares(&viewerUsername, limit)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -45,7 +45,7 @@ func GetSharesV1(w http.ResponseWriter, r *http.Request) {
 // CreateShareV1 - create a reshare
 func CreateShareV1(w http.ResponseWriter, r *http.Request) {
 	newShareParam := model.DecodeRequestToNewShare(r)
-	share, err := service.CreateDefaultShareService().CreateShare(newShareParam)
+	share, err := service.CreateShareService().CreateShare(newShareParam)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

@@ -7,6 +7,7 @@ import (
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/util"
 	"sort"
 )
 
@@ -17,26 +18,23 @@ type ShareService struct {
 	likeRepository  *repository.LikeRepository
 }
 
-func CreateDefaultShareService() *ShareService {
+func CreateShareService() *ShareService {
 	conn := db.CreateDefaultConnection()
-	return CreateShareService(
+	return &ShareService{
 		repository.CreateShareRepository(conn),
 		repository.CreatePostRepository(conn),
 		repository.CreateUserRepository(conn),
 		repository.CreateLikeRepository(conn),
-	)
+	}
 }
 
-func CreateShareService(
-	shareRepository *repository.ShareRepository,
-	postRepository *repository.PostRepository,
-	userRepository *repository.UserRepository,
-	likeRepository *repository.LikeRepository) *ShareService {
+func CreateTestShareService() *ShareService {
+	conn := util.SetupTestDatabase()
 	return &ShareService{
-		shareRepository,
-		postRepository,
-		userRepository,
-		likeRepository,
+		repository.CreateShareRepository(conn),
+		repository.CreatePostRepository(conn),
+		repository.CreateUserRepository(conn),
+		repository.CreateLikeRepository(conn),
 	}
 }
 

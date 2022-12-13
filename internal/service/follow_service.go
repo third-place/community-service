@@ -33,7 +33,7 @@ func CreateFollowService() *FollowService {
 
 func CreateTestFollowService() *FollowService {
 	conn := util.SetupTestDatabase()
-	producer := kafka2.CreateTestProducer()
+	producer := util.CreateTestProducer()
 	return &FollowService{
 		repository.CreateUserRepository(conn),
 		repository.CreateFollowRepository(conn),

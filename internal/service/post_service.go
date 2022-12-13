@@ -41,7 +41,7 @@ func CreatePostService() *PostService {
 
 func CreateTestPostService() *PostService {
 	conn := util.SetupTestDatabase()
-	producer := kafka.CreateTestProducer()
+	producer := util.CreateTestProducer()
 	return &PostService{
 		postRepository:   repository.CreatePostRepository(conn),
 		userRepository:   repository.CreateUserRepository(conn),

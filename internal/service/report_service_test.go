@@ -4,7 +4,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
-	"github.com/third-place/community-service/internal/test"
 	"github.com/third-place/community-service/internal/util"
 	"testing"
 )
@@ -27,8 +26,8 @@ func Test_PostReport_HappyPath(t *testing.T) {
 	)
 
 	// then
-	test.Assert(t, err == nil)
-	test.Assert(t, report != nil)
+	util.Assert(t, err == nil)
+	util.Assert(t, report != nil)
 }
 
 func Test_PostReport_Fails_WhenPostMissing(t *testing.T) {
@@ -46,9 +45,9 @@ func Test_PostReport_Fails_WhenPostMissing(t *testing.T) {
 	)
 
 	// then
-	test.Assert(t, err != nil)
-	test.Assert(t, err.Error() == constants.ErrorMessagePostNotFound)
-	test.Assert(t, report == nil)
+	util.Assert(t, err != nil)
+	util.Assert(t, err.Error() == constants.ErrorMessagePostNotFound)
+	util.Assert(t, report == nil)
 }
 
 func Test_PostReport_Fails_WhenUserMissing(t *testing.T) {
@@ -65,9 +64,9 @@ func Test_PostReport_Fails_WhenUserMissing(t *testing.T) {
 	)
 
 	// then
-	test.Assert(t, err != nil)
-	test.Assert(t, err.Error() == constants.ErrorMessageUserNotFound)
-	test.Assert(t, report == nil)
+	util.Assert(t, err != nil)
+	util.Assert(t, err.Error() == constants.ErrorMessageUserNotFound)
+	util.Assert(t, report == nil)
 }
 
 func Test_ReplyReport_HappyPath(t *testing.T) {
@@ -89,6 +88,6 @@ func Test_ReplyReport_HappyPath(t *testing.T) {
 	)
 
 	// then
-	test.Assert(t, err == nil)
-	test.Assert(t, report != nil)
+	util.Assert(t, err == nil)
+	util.Assert(t, report != nil)
 }

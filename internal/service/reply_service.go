@@ -35,7 +35,7 @@ func CreateReplyService() *ReplyService {
 
 func CreateTestReplyService() *ReplyService {
 	conn := util.SetupTestDatabase()
-	producer := kafka2.CreateTestProducer()
+	producer := util.CreateTestProducer()
 	return &ReplyService{
 		repository.CreateUserRepository(conn),
 		repository.CreatePostRepository(conn),

@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
-	"github.com/third-place/community-service/internal/test"
 	"github.com/third-place/community-service/internal/util"
 	"testing"
 )
@@ -17,8 +16,8 @@ func Test_CanGetUser(t *testing.T) {
 	response, err := svc.GetUser(*user.Uuid)
 
 	// then
-	test.Assert(t, err == nil)
-	test.Assert(t, response.Uuid == user.Uuid.String())
+	util.Assert(t, err == nil)
+	util.Assert(t, response.Uuid == user.Uuid.String())
 }
 
 func Test_DeleteMissingUser_Fails(t *testing.T) {
@@ -29,8 +28,8 @@ func Test_DeleteMissingUser_Fails(t *testing.T) {
 	err := svc.DeleteUser(uuid.New())
 
 	// then
-	test.Assert(t, err != nil)
-	test.Assert(t, err.Error() == constants.ErrorMessageUserNotFound)
+	util.Assert(t, err != nil)
+	util.Assert(t, err.Error() == constants.ErrorMessageUserNotFound)
 }
 
 func Test_Requesting_UserNotFound(t *testing.T) {
@@ -41,6 +40,6 @@ func Test_Requesting_UserNotFound(t *testing.T) {
 	user, err := svc.GetUser(uuid.New())
 
 	// then
-	test.Assert(t, user == nil)
-	test.Assert(t, err != nil)
+	util.Assert(t, user == nil)
+	util.Assert(t, err != nil)
 }

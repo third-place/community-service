@@ -2,12 +2,14 @@ package util
 
 import (
 	"context"
+	kafka2 "github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"github.com/third-place/community-service/internal/db"
 	"github.com/third-place/community-service/internal/entity"
+	"github.com/third-place/community-service/internal/kafka"
 	"github.com/third-place/community-service/internal/model"
 	"math/rand"
 	"strconv"
@@ -77,4 +79,14 @@ func migrateDb(dbConn *gorm.DB) {
 		&entity.Report{},
 		&entity.User{},
 	)
+}
+
+func CreateTestProducer() kafka.Producer {
+	return &TestProducer{}
+}
+
+type TestProducer struct{}
+
+func (t *TestProducer) Produce(msg *kafka2.Message, deliveryChan chan kafka2.Event) error {
+	return nil
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/model"
-	"github.com/third-place/community-service/internal/test"
 	"github.com/third-place/community-service/internal/util"
 	"testing"
 )
@@ -26,8 +25,8 @@ func Test_GetReplies_ForPost(t *testing.T) {
 	post, err := svc.CreatePost(session, model.CreateNewPost("this is a test"))
 
 	// expect
-	test.Assert(t, err == nil)
-	test.Assert(t, post != nil)
+	util.Assert(t, err == nil)
+	util.Assert(t, post != nil)
 
 	// given
 	for i := 0; i < NumberOfRepliesToCreate; i++ {
@@ -38,7 +37,7 @@ func Test_GetReplies_ForPost(t *testing.T) {
 	replies, _ := svc.GetRepliesForPost(uuid.MustParse(post.Uuid))
 
 	// then
-	test.Assert(t, len(replies) == NumberOfRepliesToCreate)
+	util.Assert(t, len(replies) == NumberOfRepliesToCreate)
 }
 
 func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
@@ -58,9 +57,9 @@ func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
 	})
 
 	// then
-	test.Assert(t, err != nil)
-	test.Assert(t, err.Error() == constants.ErrorMessageUserNotFound)
-	test.Assert(t, response == nil)
+	util.Assert(t, err != nil)
+	util.Assert(t, err.Error() == constants.ErrorMessageUserNotFound)
+	util.Assert(t, response == nil)
 }
 
 func Test_CreateReply_Fails_WithMissing_Post(t *testing.T) {
@@ -80,9 +79,9 @@ func Test_CreateReply_Fails_WithMissing_Post(t *testing.T) {
 	})
 
 	// then
-	test.Assert(t, err != nil)
-	test.Assert(t, err.Error() == constants.ErrorMessagePostNotFound)
-	test.Assert(t, response == nil)
+	util.Assert(t, err != nil)
+	util.Assert(t, err.Error() == constants.ErrorMessagePostNotFound)
+	util.Assert(t, response == nil)
 }
 
 func Test_GetReplies_FailsWithMissing_Post(t *testing.T) {
@@ -93,7 +92,7 @@ func Test_GetReplies_FailsWithMissing_Post(t *testing.T) {
 	response, err := svc.GetRepliesForPost(uuid.New())
 
 	// then
-	test.Assert(t, err != nil)
-	test.Assert(t, err.Error() == constants.ErrorMessagePostNotFound)
-	test.Assert(t, response == nil)
+	util.Assert(t, err != nil)
+	util.Assert(t, err.Error() == constants.ErrorMessagePostNotFound)
+	util.Assert(t, response == nil)
 }

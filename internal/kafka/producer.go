@@ -11,12 +11,6 @@ type Producer interface {
 	Produce(msg *kafka.Message, deliveryChan chan kafka.Event) error
 }
 
-type TestProducer struct{}
-
-func (t *TestProducer) Produce(msg *kafka.Message, deliveryChan chan kafka.Event) error {
-	return nil
-}
-
 func CreateProducer() Producer {
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": os.Getenv("KAFKA_BOOTSTRAP_SERVERS"),
@@ -29,10 +23,6 @@ func CreateProducer() Producer {
 		log.Fatal(fmt.Sprintf("Failed to create producer: %s", err))
 	}
 	return producer
-}
-
-func CreateTestProducer() Producer {
-	return &TestProducer{}
 }
 
 func CreateMessage(data []byte, topic string) *kafka.Message {

@@ -104,11 +104,12 @@ func GetPostsFirehoseV1(w http.ResponseWriter, r *http.Request) {
 // GetLikedPostsV1 - get liked posts
 func GetLikedPostsV1(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=30")
+	session, _ := util.GetSession(r.Header.Get("x-session-token"))
 	params := mux.Vars(r)
 	username := params["username"]
 	limit := constants.UserPostsDefaultPageSize
 	var posts []*model.Post
-	posts, _ = service.CreatePostService().GetLikedPosts(username, limit)
+	posts, _ = service.CreatePostService().GetLikedPosts(session, username, limit)
 	data, _ := json.Marshal(posts)
 	_, _ = w.Write(data)
 }

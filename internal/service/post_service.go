@@ -262,7 +262,10 @@ func (p *PostService) canSeePost(session *model.Session, post *entity.Post) bool
 		return false
 	}
 	if post.User.Visibility == model.PROTECTED {
-		sessionUuid := uuid.MustParse(session.User.Uuid)
+		sessionUuid, err := uuid.Parse(session.User.Uuid)
+		if err != nil {
+			return false
+		}
 		follow := p.followRepository.FindByUserAndFollowing(*post.User.Uuid, sessionUuid)
 		return follow != nil
 	}

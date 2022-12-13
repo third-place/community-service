@@ -16,7 +16,7 @@ func CreatePostReportV1(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newReport := model.DecodeRequestToNewPostReport(r)
-	report, err := service.CreateDefaultReportService().CreatePostReport(newReport)
+	report, err := service.CreateReportService().CreatePostReport(newReport)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -33,7 +33,7 @@ func CreateReplyReportV1(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newReport := model.DecodeRequestToNewPostReport(r)
-	replyReport, err := service.CreateDefaultReportService().CreateReplyReport(newReport)
+	replyReport, err := service.CreateReportService().CreateReplyReport(newReport)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

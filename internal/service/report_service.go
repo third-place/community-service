@@ -7,6 +7,7 @@ import (
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/util"
 )
 
 type ReportService struct {
@@ -16,25 +17,23 @@ type ReportService struct {
 	reportRepository *repository.ReportRepository
 }
 
-func CreateDefaultReportService() *ReportService {
+func CreateReportService() *ReportService {
 	conn := db.CreateDefaultConnection()
-	return CreateReportService(
+	return &ReportService{
 		repository.CreateUserRepository(conn),
 		repository.CreatePostRepository(conn),
 		repository.CreateReplyRepository(conn),
-		repository.CreateReportRepository(conn))
+		repository.CreateReportRepository(conn),
+	}
 }
 
-func CreateReportService(
-	userRepository *repository.UserRepository,
-	postRepository *repository.PostRepository,
-	replyRepository *repository.ReplyRepository,
-	reportRepository *repository.ReportRepository) *ReportService {
+func CreateTestReportService() *ReportService {
+	conn := util.SetupTestDatabase()
 	return &ReportService{
-		userRepository,
-		postRepository,
-		replyRepository,
-		reportRepository,
+		repository.CreateUserRepository(conn),
+		repository.CreatePostRepository(conn),
+		repository.CreateReplyRepository(conn),
+		repository.CreateReportRepository(conn),
 	}
 }
 

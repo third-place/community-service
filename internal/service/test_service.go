@@ -11,6 +11,7 @@ type TestService struct {
 	postService   *PostService
 	replyService  *ReplyService
 	followService *FollowService
+	reportService *ReportService
 }
 
 func CreateTestService() *TestService {
@@ -19,6 +20,7 @@ func CreateTestService() *TestService {
 		CreateTestPostService(),
 		CreateTestReplyService(),
 		CreateTestFollowService(),
+		CreateTestReportService(),
 	}
 }
 
@@ -79,4 +81,12 @@ func (t *TestService) CreateReply(session *model.Session, reply *model.NewReply)
 
 func (t *TestService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, error) {
 	return t.replyService.GetRepliesForPost(postUuid)
+}
+
+func (t *TestService) CreatePostReport(newReport *model.NewPostReport) (*model.PostReport, error) {
+	return t.reportService.CreatePostReport(newReport)
+}
+
+func (t *TestService) CreateReplyReport(newReport *model.NewPostReport) (*model.PostReport, error) {
+	return t.reportService.CreateReplyReport(newReport)
 }

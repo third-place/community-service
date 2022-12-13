@@ -28,7 +28,7 @@ type PostReport struct {
 	Post Post `json:"post"`
 }
 
-func CreateNewPostReport(userUuid *uuid.UUID, postUuid *uuid.UUID, message string) *NewPostReport {
+func CreateNewPostReport(userUuid uuid.UUID, postUuid uuid.UUID, message string) *NewPostReport {
 	return &NewPostReport{
 		Text: message,
 		User: User{

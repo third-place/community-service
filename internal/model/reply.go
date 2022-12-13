@@ -37,7 +37,7 @@ func CreateReply(postUuid *uuid.UUID, replyUserUuid *uuid.UUID, replyUuid *uuid.
 	}
 }
 
-func CreateNewReply(postUuid *uuid.UUID, message string) *NewReply {
+func CreateNewReply(postUuid uuid.UUID, message string) *NewReply {
 	return &NewReply{
 		Text: message,
 		Post: Post{

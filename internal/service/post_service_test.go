@@ -22,66 +22,14 @@ func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	// then
 	util.Assert(t, err == nil)
 	util.Assert(t, response != nil)
-	util.Assert(t, response.Visibility == model.PUBLIC)
 }
 
-func Test_PostService_CreateNewPost_WithPrivateVisibility(t *testing.T) {
+func Test_PostService_Respects_ProtectedVisibility(t *testing.T) {
 	// setup
 	svc := CreateTestService()
-	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
-
-	// given
-	newPost := model.CreateNewPost(message)
-	newPost.Visibility = model.PRIVATE
-
-	// when
-	response, err := svc.CreatePost(session, newPost)
-
-	// then
-	util.Assert(t, err == nil)
-	util.Assert(t, response.Visibility == model.PRIVATE)
-}
-
-func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
-	// setup
-	svc := CreateTestService()
-	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
-	newPost := model.CreateNewPost(message)
-	newPost.Visibility = model.PRIVATE
-	response, err := svc.CreatePost(session, newPost)
-
-	// when
-	post, err := svc.GetPost(nil, uuid.MustParse(response.Uuid))
-
-	// then
-	util.Assert(t, post == nil)
-	util.Assert(t, err != nil)
-}
-
-func Test_PostService_CreateNewPost_WithFollowingVisibility(t *testing.T) {
-	// setup
-	svc := CreateTestService()
-	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
-
-	// given
-	newPost := model.CreateNewPost(message)
-	newPost.Visibility = model.FOLLOWING
-
-	// when
-	response, err := svc.CreatePost(session, newPost)
-
-	// then
-	util.Assert(t, err == nil)
-	util.Assert(t, response.Visibility == model.FOLLOWING)
-}
-
-func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
-	// setup
-	svc := CreateTestService()
-	user1 := svc.CreateUser(util.CreateTestUser())
+	user1Model := util.CreateTestUser()
+	user1Model.Visibility = model.PROTECTED
+	user1 := svc.CreateUser(user1Model)
 	session1 := model.CreateSessionModelFromString(*user1.Uuid)
 	user2 := svc.CreateUser(util.CreateTestUser())
 	session2 := model.CreateSessionModelFromString(*user2.Uuid)
@@ -89,7 +37,6 @@ func Test_PostService_Respects_FollowingVisibility(t *testing.T) {
 	session3 := model.CreateSessionModelFromString(*user3.Uuid)
 	_, _ = svc.CreateFollow(*user1.Uuid, *user2.Uuid)
 	newPost := model.CreateNewPost(message)
-	newPost.Visibility = model.FOLLOWING
 	response, _ := svc.CreatePost(session1, newPost)
 
 	// when

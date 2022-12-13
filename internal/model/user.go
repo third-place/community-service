@@ -15,33 +15,21 @@ import (
 )
 
 type User struct {
-	Uuid string `json:"uuid"`
-
-	Username string `json:"username,omitempty"`
-
-	CurrentEmail string `json:"current_email,omitempty"`
-
-	Name string `json:"name,omitempty"`
-
-	Birthday string `json:"birthday,omitempty"`
-
-	BioMessage string `json:"bio_message,omitempty"`
-
-	Role Role `json:"role,omitempty"`
-
-	IsBanned bool `json:"is_banned,omitempty"`
-
-	ProfilePic string `json:"profile_pic,omitempty"`
-
-	CreatedAt time.Time `json:"created_at,omitempty"`
-
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-
-	Posts []Post `json:"posts,omitempty"`
-
-	Replies []Reply `json:"replies,omitempty"`
-
-	Follows []Follow `json:"follows,omitempty"`
+	Uuid         string     `json:"uuid"`
+	Username     string     `json:"username,omitempty"`
+	CurrentEmail string     `json:"current_email,omitempty"`
+	Name         string     `json:"name,omitempty"`
+	Birthday     string     `json:"birthday,omitempty"`
+	BioMessage   string     `json:"bio_message,omitempty"`
+	Role         Role       `json:"role,omitempty"`
+	Visibility   Visibility `json:"visibility,omitempty"`
+	IsBanned     bool       `json:"is_banned,omitempty"`
+	ProfilePic   string     `json:"profile_pic,omitempty"`
+	CreatedAt    time.Time  `json:"created_at,omitempty"`
+	UpdatedAt    time.Time  `json:"updated_at,omitempty"`
+	Posts        []Post     `json:"posts,omitempty"`
+	Replies      []Reply    `json:"replies,omitempty"`
+	Follows      []Follow   `json:"follows,omitempty"`
 }
 
 func DecodeMessageToUser(message []byte) (*User, error) {

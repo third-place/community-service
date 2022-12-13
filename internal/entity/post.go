@@ -12,9 +12,8 @@ type Post struct {
 	Draft         bool
 	UserID        uint
 	User          *User
-	Visibility    model.Visibility `gorm:"default:'public'"`
-	Uuid          *uuid.UUID       `gorm:"type:uuid;default:uuid_generate_v4()"`
-	Reports       []*Report        `gorm:"polymorphic:Reported;"`
+	Uuid          *uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	Reports       []*Report  `gorm:"polymorphic:Reported;"`
 	Images        []*Image
 	Likes         uint
 	Replies       uint
@@ -31,16 +30,12 @@ func (p *Post) GetOwnerUUID() string {
 }
 
 func CreatePost(user *User, post *model.NewPost) *Post {
-	if post.Visibility == "" {
-		post.Visibility = model.PUBLIC
-	}
 	postUuid := uuid.New()
 	return &Post{
-		Uuid:       &postUuid,
-		UserID:     user.ID,
-		Text:       post.Text,
-		Draft:      post.Draft,
-		Visibility: post.Visibility,
+		Uuid:   &postUuid,
+		UserID: user.ID,
+		Text:   post.Text,
+		Draft:  post.Draft,
 	}
 }
 
@@ -51,7 +46,6 @@ func CreateShare(user *User, post *Post, share *model.NewShare) *Post {
 		UserID:      user.ID,
 		User:        user,
 		Text:        share.Text,
-		Visibility:  model.PUBLIC,
 		SharePost:   post,
 		SharePostID: post.ID,
 	}
@@ -60,7 +54,6 @@ func CreateShare(user *User, post *Post, share *model.NewShare) *Post {
 func CreateReply(user *User, post *Post, reply *model.NewReply) *Post {
 	return &Post{
 		Text:          reply.Text,
-		Visibility:    model.PUBLIC,
 		ReplyToPost:   post,
 		ReplyToPostID: post.ID,
 		UserID:        user.ID,

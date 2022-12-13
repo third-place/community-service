@@ -15,10 +15,9 @@ import (
 )
 
 type NewPost struct {
-	Text       string     `json:"text"`
-	Draft      bool       `json:"draft"`
-	Visibility Visibility `json:"access,omitempty"`
-	Images     []NewImage `json:"images,omitempty"`
+	Text   string     `json:"text"`
+	Draft  bool       `json:"draft"`
+	Images []NewImage `json:"images,omitempty"`
 }
 
 func DecodeRequestToNewPost(r *http.Request) (*NewPost, error) {

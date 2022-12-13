@@ -484,6 +484,8 @@ components:
           type: string
         role:
           $ref: "#/components/schemas/Role"
+        visibility:
+          $ref: "#/components/schemas/Visibility"
         is_banned:
           type: boolean
           default: false
@@ -544,8 +546,6 @@ components:
           $ref: "#/components/schemas/Post"
         user:
           $ref: "#/components/schemas/User"
-        visibility:
-          $ref: "#/components/schemas/Visibility"
         images:
           type: array
           items:
@@ -563,8 +563,6 @@ components:
           type: string
         draft:
           type: boolean
-        visibility:
-          $ref: "#/components/schemas/Visibility"
         images:
           type: array
           items:

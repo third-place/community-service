@@ -258,18 +258,18 @@ func (p *PostService) publishPostToKafka(post *model.Post) error {
 }
 
 func (p *PostService) canSee(session *model.Session, post *entity.Post) bool {
-	if post.Visibility == model.PUBLIC {
+	if p.securityService.Owns(session, post) {
 		return true
 	}
-	if session == nil {
+	if post.Draft || post.User.Visibility == model.PRIVATE {
 		return false
 	}
-	if (post.Draft || post.Visibility == model.PRIVATE) && !p.securityService.Owns(session, post) {
-		return false
+	if post.User.Visibility == model.PROTECTED {
+		sessionUuid := uuid.MustParse(session.User.Uuid)
+		follow := p.followRepository.FindByUserAndFollowing(*post.User.Uuid, sessionUuid)
+		return follow != nil
 	}
-	sessionUuid := uuid.MustParse(session.User.Uuid)
-	follow := p.followRepository.FindByUserAndFollowing(*post.User.Uuid, sessionUuid)
-	return follow != nil
+	return true
 }
 
 func removeDuplicatePosts(posts []*entity.Post) []*entity.Post {

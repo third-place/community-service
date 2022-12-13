@@ -12,8 +12,9 @@ type User struct {
 	Username   string     `gorm:"unique;not null"`
 	ProfilePic string
 	Name       string
-	Role       string `gorm:"default:'user'"`
-	IsBanned   bool   `gorm:"default:false"`
+	Role       string           `gorm:"default:'user'"`
+	Visibility model.Visibility `gorm:"default:'public'"`
+	IsBanned   bool             `gorm:"default:false"`
 	Follows    []*Follow
 	Posts      []*Post
 }

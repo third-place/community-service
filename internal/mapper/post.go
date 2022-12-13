@@ -11,16 +11,15 @@ func GetPostModelFromEntity(post *entity.Post) *model.Post {
 		sharePost = GetPostModelFromEntity(post.SharePost)
 	}
 	return &model.Post{
-		Uuid:       post.Uuid.String(),
-		Text:       post.Text,
-		Draft:      post.Draft,
-		User:       *GetUserModelFromEntity(post.User),
-		CreatedAt:  post.CreatedAt,
-		Visibility: post.Visibility,
-		Images:     GetImageModelsFromEntities(post.Images),
-		Likes:      post.Likes,
-		Replies:    post.Replies,
-		Share:      sharePost,
+		Uuid:      post.Uuid.String(),
+		Text:      post.Text,
+		Draft:     post.Draft,
+		User:      *GetUserModelFromEntity(post.User),
+		CreatedAt: post.CreatedAt,
+		Images:    GetImageModelsFromEntities(post.Images),
+		Likes:     post.Likes,
+		Replies:   post.Replies,
+		Share:     sharePost,
 	}
 }
 

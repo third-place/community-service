@@ -21,7 +21,7 @@ func Test_GetReplies_ForPost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 	post, err := svc.CreatePost(session, model.CreateNewPost("this is a test"))
 
 	// expect
@@ -44,7 +44,7 @@ func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	testUser, _ := uuid.NewRandom()
-	session := model.CreateSessionModelFromString(testUser)
+	session := model.CreateSession(testUser)
 
 	// when
 	postUuid := uuid.New()
@@ -66,7 +66,7 @@ func Test_CreateReply_Fails_WithMissing_Post(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 
 	// when
 	postUuid := uuid.New()

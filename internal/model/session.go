@@ -17,7 +17,7 @@ type Session struct {
 	Token string `json:"token,omitempty"`
 }
 
-func CreateSessionModelFromString(uuid uuid.UUID) *Session {
+func CreateSession(uuid uuid.UUID) *Session {
 	return &Session{
 		User: User{
 			Uuid: uuid.String(),

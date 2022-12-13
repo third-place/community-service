@@ -12,7 +12,7 @@ func Test_PostReport_HappyPath(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 	post, _ := svc.CreatePost(session, model.CreateNewPost(""))
 	user2 := svc.CreateUser(util.CreateTestUser())
 
@@ -73,7 +73,7 @@ func Test_ReplyReport_HappyPath(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user1 := svc.CreateUser(util.CreateTestUser())
-	session1 := model.CreateSessionModelFromString(*user1.Uuid)
+	session1 := model.CreateSession(*user1.Uuid)
 	post, _ := svc.CreatePost(session1, model.CreateNewPost(""))
 	reply, _ := svc.CreateReply(session1, model.CreateNewReply(uuid.MustParse(post.Uuid), "test message"))
 	user2 := svc.CreateUser(util.CreateTestUser())

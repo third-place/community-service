@@ -14,7 +14,7 @@ func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 
 	// when
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
@@ -34,11 +34,11 @@ func Test_PostService_Respects_ProtectedVisibility(t *testing.T) {
 
 	// and a few more users...
 	user1 := svc.CreateUser(user1Model)
-	session1 := model.CreateSessionModelFromString(*user1.Uuid)
+	session1 := model.CreateSession(*user1.Uuid)
 	user2 := svc.CreateUser(util.CreateTestUser())
-	session2 := model.CreateSessionModelFromString(*user2.Uuid)
+	session2 := model.CreateSession(*user2.Uuid)
 	user3 := svc.CreateUser(util.CreateTestUser())
-	session3 := model.CreateSessionModelFromString(*user3.Uuid)
+	session3 := model.CreateSession(*user3.Uuid)
 
 	// and user 1 follows user 2
 	_, _ = svc.CreateFollow(*user1.Uuid, *user2.Uuid)
@@ -69,11 +69,11 @@ func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 
 	// and a few more users...
 	user1 := svc.CreateUser(user1Model)
-	session1 := model.CreateSessionModelFromString(*user1.Uuid)
+	session1 := model.CreateSession(*user1.Uuid)
 	user2 := svc.CreateUser(util.CreateTestUser())
-	session2 := model.CreateSessionModelFromString(*user2.Uuid)
+	session2 := model.CreateSession(*user2.Uuid)
 	user3 := svc.CreateUser(util.CreateTestUser())
-	session3 := model.CreateSessionModelFromString(*user3.Uuid)
+	session3 := model.CreateSession(*user3.Uuid)
 
 	// and user 1 follows user 2
 	_, _ = svc.CreateFollow(*user1.Uuid, *user2.Uuid)
@@ -103,7 +103,7 @@ func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	userUuid, _ := uuid.NewRandom()
-	session := model.CreateSessionModelFromString(userUuid)
+	session := model.CreateSession(userUuid)
 
 	// when
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
@@ -117,7 +117,7 @@ func Test_PostService_Can_DeletePost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 	postModel, _ := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// when
@@ -131,7 +131,7 @@ func Test_PostService_CannotGet_DeletedPost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 	postModel, _ := svc.CreatePost(session, model.CreateNewPost(message))
 	_ = svc.DeletePost(session, uuid.MustParse(postModel.Uuid))
 
@@ -147,7 +147,7 @@ func Test_GetPosts(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 
 	// when
 	posts, err := svc.GetPostsFirehose(session, constants.UserPostsDefaultPageSize)
@@ -161,7 +161,7 @@ func Test_GetPost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 
 	// given
 	post, err := svc.CreatePost(session, model.CreateNewPost(message))
@@ -194,7 +194,7 @@ func Test_PostService_GetUserPosts(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSessionModelFromString(*user.Uuid)
+	session := model.CreateSession(*user.Uuid)
 
 	// given
 	for i := 0; i < 5; i++ {
@@ -212,7 +212,7 @@ func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	testUserUuid, _ := uuid.NewRandom()
-	session := model.CreateSessionModelFromString(testUserUuid)
+	session := model.CreateSession(testUserUuid)
 
 	// given
 	for i := 0; i < 5; i++ {
@@ -240,14 +240,14 @@ func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	_, _ = svc.CreateFollow(*bob.Uuid, *alice.Uuid)
 
 	// given -- alice creates some posts
-	session := model.CreateSessionModelFromString(*alice.Uuid)
+	session := model.CreateSession(*alice.Uuid)
 	for i := 0; i < 5; i++ {
 		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
 	}
 
 	// when -- bob gets posts from people he follows
 	posts, err := svc.GetPostsForUserFollows(
-		model.CreateSessionModelFromString(*bob.Uuid),
+		model.CreateSession(*bob.Uuid),
 		bob.Username,
 		constants.UserPostsDefaultPageSize,
 	)

@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
+	"github.com/third-place/community-service/internal/util"
 )
 
 type TestService struct {
@@ -28,6 +29,11 @@ func CreateTestService() *TestService {
 
 func (t *TestService) CreateUser(user *model.User) *entity.User {
 	return t.userService.CreateUser(user)
+}
+
+func (t TestService) CreateTestUserSession() *model.Session {
+	userEntity := t.CreateUser(util.CreateTestUser())
+	return model.CreateSession(*userEntity.Uuid)
 }
 
 func (t *TestService) GetUser(userUuid uuid.UUID) (*model.User, error) {

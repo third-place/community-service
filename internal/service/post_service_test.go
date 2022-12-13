@@ -13,8 +13,7 @@ const message = "this is a test"
 func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	// setup
 	svc := CreateTestService()
-	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSession(*user.Uuid)
+	session := svc.CreateTestUserSession()
 
 	// when
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))

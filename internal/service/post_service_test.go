@@ -218,7 +218,7 @@ func Test_PostService_GetUserPosts(t *testing.T) {
 	}
 
 	// when
-	posts, _ := svc.GetPostsForUser(user.Username, nil, constants.UserPostsDefaultPageSize)
+	posts, _ := svc.GetPostsForUser(session, user.Username, constants.UserPostsDefaultPageSize)
 
 	// then
 	util.Assert(t, len(posts) == 5)
@@ -239,7 +239,7 @@ func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	}
 
 	// when
-	posts, err := svc.GetPostsForUser(testUserUuid.String(), nil, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsForUser(session, testUserUuid.String(), constants.UserPostsDefaultPageSize)
 
 	// then
 	util.Assert(t, posts == nil)
@@ -262,7 +262,11 @@ func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	}
 
 	// when -- bob gets posts from people he follows
-	posts, err := svc.GetPostsForUserFollows(bob.Username, *bob.Uuid, constants.UserPostsDefaultPageSize)
+	posts, err := svc.GetPostsForUserFollows(
+		model.CreateSessionModelFromString(*bob.Uuid),
+		bob.Username,
+		constants.UserPostsDefaultPageSize,
+	)
 
 	// then -- expect to see posts from alice
 	util.Assert(t, err == nil)

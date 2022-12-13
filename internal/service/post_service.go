@@ -135,12 +135,12 @@ func (p *PostService) GetPostsForUser(session *model.Session, usernameOfPosts st
 	return fullListModels, nil
 }
 
-func (p *PostService) GetPostsForUserFollows(usernameFollowing string, viewerUserUuid uuid.UUID, limit int) ([]*model.Post, error) {
+func (p *PostService) GetPostsForUserFollows(session *model.Session, usernameFollowing string, limit int) ([]*model.Post, error) {
 	_, err := p.userRepository.FindOneByUsername(usernameFollowing)
 	if err != nil {
 		return nil, err
 	}
-	viewer, err := p.userRepository.FindOneByUuid(viewerUserUuid)
+	viewer, err := p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		return nil, err
 	}
@@ -155,8 +155,8 @@ func (p *PostService) GetAllPosts(limit int) []*model.Post {
 	return mapper.GetPostModelsFromEntities(posts)
 }
 
-func (p *PostService) GetDraftPosts(sessionUuid uuid.UUID, limit int) []*model.Post {
-	user, _ := p.userRepository.FindOneByUuid(sessionUuid)
+func (p *PostService) GetDraftPosts(session *model.Session, limit int) []*model.Post {
+	user, _ := p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
 	posts := p.postRepository.FindDraftsByUser(user, limit)
 	return mapper.GetPostModelsFromEntities(posts)
 }

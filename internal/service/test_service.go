@@ -65,8 +65,8 @@ func (t *TestService) CreateFollow(sessionUserUuid uuid.UUID, followUuid uuid.UU
 	)
 }
 
-func (t *TestService) GetPostsForUserFollows(username string, viewerUserUuid uuid.UUID, limit int) ([]*model.Post, error) {
-	return t.postService.GetPostsForUserFollows(username, viewerUserUuid, limit)
+func (t *TestService) GetPostsForUserFollows(session *model.Session, username string, limit int) ([]*model.Post, error) {
+	return t.postService.GetPostsForUserFollows(session, username, limit)
 }
 
 func (t *TestService) GetUserFollows(username string) ([]*model.Follow, error) {

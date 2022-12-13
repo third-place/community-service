@@ -64,11 +64,7 @@ func GetPostsForUserFollowsV1(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	username := params["username"]
 	session, _ := util.GetSession(r.Header.Get("x-session-token"))
-	var viewerUuid uuid.UUID
-	if session != nil {
-		viewerUuid = uuid.MustParse(session.User.Uuid)
-	}
-	posts, err := service.CreatePostService().GetPostsForUserFollows(username, viewerUuid, limit)
+	posts, err := service.CreatePostService().GetPostsForUserFollows(session, username, limit)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -85,10 +81,7 @@ func GetDraftPostsV1(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	posts := service.CreatePostService().GetDraftPosts(
-		uuid.MustParse(session.User.Uuid),
-		constants.UserPostsDefaultPageSize,
-	)
+	posts := service.CreatePostService().GetDraftPosts(session, constants.UserPostsDefaultPageSize)
 	data, _ := json.Marshal(posts)
 	_, _ = w.Write(data)
 }

@@ -54,8 +54,8 @@ func (t *TestService) GetPostsFirehose(username *string, limit int) ([]*model.Po
 	return t.postService.GetPostsFirehose(username, limit)
 }
 
-func (t *TestService) GetPostsForUser(username string, viewerUuid *uuid.UUID, limit int) ([]*model.Post, error) {
-	return t.postService.GetPostsForUser(username, viewerUuid, limit)
+func (t *TestService) GetPostsForUser(session *model.Session, username string, limit int) ([]*model.Post, error) {
+	return t.postService.GetPostsForUser(session, username, limit)
 }
 
 func (t *TestService) CreateFollow(sessionUserUuid uuid.UUID, followUuid uuid.UUID) (*model.Follow, error) {

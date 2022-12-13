@@ -116,16 +116,16 @@ func (p *PostService) DeletePost(session *model.Session, postUuid uuid.UUID) err
 	return nil
 }
 
-func (p *PostService) GetPostsForUser(username string, viewerUuid *uuid.UUID, limit int) ([]*model.Post, error) {
-	user, err := p.userRepository.FindOneByUsername(username)
+func (p *PostService) GetPostsForUser(session *model.Session, usernameOfPosts string, limit int) ([]*model.Post, error) {
+	userOfPosts, err := p.userRepository.FindOneByUsername(usernameOfPosts)
 	if err != nil {
 		return nil, err
 	}
-	postEntities := p.populateSharePosts(p.postRepository.FindPublishedByUser(user, limit))
+	postEntities := p.populateSharePosts(p.postRepository.FindPublishedByUser(userOfPosts, limit))
 	var fullListModels []*model.Post
 	var viewer *entity.User
-	if viewerUuid != nil {
-		viewer, _ = p.userRepository.FindOneByUuid(*viewerUuid)
+	if session != nil {
+		viewer, _ = p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
 	}
 	if viewer != nil {
 		fullListModels = p.populateModelsWithLikes(postEntities, viewer)

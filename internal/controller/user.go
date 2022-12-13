@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/google/uuid"
 	"github.com/gorilla/feeds"
 	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/constants"
@@ -19,10 +18,6 @@ func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	username := params["username"]
 	session, _ := util.GetSession(r.Header.Get("x-session-token"))
-	var viewerUuid uuid.UUID
-	if session != nil {
-		viewerUuid = uuid.MustParse(session.User.Uuid)
-	}
 	user, err := service.CreateUserService().GetUserByUsername(username)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -33,7 +28,10 @@ func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
 		nameToShow = user.Name + " (" + nameToShow + ")"
 	}
 	posts, _ := service.CreatePostService().GetPostsForUser(
-		username, &viewerUuid, constants.UserPostsDefaultPageSize)
+		session,
+		username,
+		constants.UserPostsDefaultPageSize,
+	)
 	feed := &feeds.Feed{
 		Title:       "RSS for @" + username + " - Third place",
 		Link:        &feeds.Link{Href: "https://thirdplaceapp.com/posts/" + username + "/rss"},
@@ -65,12 +63,11 @@ func GetUserPostsV1(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	username := params["username"]
 	session, _ := util.GetSession(r.Header.Get("x-session-token"))
-	var viewerUuid uuid.UUID
-	if session != nil {
-		viewerUuid = uuid.MustParse(session.User.Uuid)
-	}
 	posts, _ := service.CreatePostService().GetPostsForUser(
-		username, &viewerUuid, constants.UserPostsDefaultPageSize)
+		session,
+		username,
+		constants.UserPostsDefaultPageSize,
+	)
 	data, _ := json.Marshal(posts)
 	_, _ = w.Write(data)
 }

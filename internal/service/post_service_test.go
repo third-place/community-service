@@ -28,25 +28,33 @@ func Test_PostService_Respects_ProtectedVisibility(t *testing.T) {
 	// setup
 	svc := CreateTestService()
 	user1Model := util.CreateTestUser()
+
+	// given user 1 is protected
 	user1Model.Visibility = model.PROTECTED
+
+	// and a few more users...
 	user1 := svc.CreateUser(user1Model)
 	session1 := model.CreateSessionModelFromString(*user1.Uuid)
 	user2 := svc.CreateUser(util.CreateTestUser())
 	session2 := model.CreateSessionModelFromString(*user2.Uuid)
 	user3 := svc.CreateUser(util.CreateTestUser())
 	session3 := model.CreateSessionModelFromString(*user3.Uuid)
-	_, _ = svc.CreateFollow(*user1.Uuid, *user2.Uuid)
-	newPost := model.CreateNewPost(message)
-	response, _ := svc.CreatePost(session1, newPost)
 
-	// when
+	// and user 1 follows user 2
+	_, _ = svc.CreateFollow(*user1.Uuid, *user2.Uuid)
+
+	// and user 1 creates a post
+	response, _ := svc.CreatePost(session1, model.CreateNewPost(message))
+
+	// when user 2 and 3 get user 1's posts
 	post1, err1 := svc.GetPost(session2, uuid.MustParse(response.Uuid))
 	post2, err2 := svc.GetPost(session3, uuid.MustParse(response.Uuid))
 
-	// then
+	// then user 2 can see
 	util.Assert(t, post1 != nil)
 	util.Assert(t, err1 == nil)
 
+	// and user 3 cannot
 	util.Assert(t, post2 == nil)
 	util.Assert(t, err2 != nil)
 }

@@ -12,7 +12,6 @@ import (
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
 	"github.com/third-place/community-service/internal/util"
-	"log"
 	"sort"
 )
 
@@ -42,10 +41,7 @@ func CreatePostService() *PostService {
 
 func CreateTestPostService() *PostService {
 	conn := util.SetupTestDatabase()
-	producer, err := kafka.CreateTestProducer()
-	if err != nil {
-		log.Fatal(err)
-	}
+	producer := kafka.CreateTestProducer()
 	return &PostService{
 		postRepository:   repository.CreatePostRepository(conn),
 		userRepository:   repository.CreateUserRepository(conn),

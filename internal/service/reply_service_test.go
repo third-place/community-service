@@ -1,19 +1,19 @@
-package service_test
+package service
 
 import (
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/entity"
 	"github.com/third-place/community-service/internal/model"
-	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/test"
+	"github.com/third-place/community-service/internal/util"
 	"testing"
 )
 
 const NumberOfRepliesToCreate = 5
 
 func createTestUser() *entity.User {
-	return service.CreateUserService().CreateUser(test.CreateTestUser())
+	return CreateUserService().CreateUser(test.CreateTestUser())
 }
 
 func createReplyModel(post *model.Post) *model.NewReply {
@@ -25,11 +25,10 @@ func createReplyModel(post *model.Post) *model.NewReply {
 
 func Test_GetReplies_ForPost(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	postService := service.CreatePostService()
-	replyService := service.CreateReplyService()
-	post, err := postService.CreatePost(session, model.CreateNewPost("this is a test"))
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
+	post, err := svc.CreatePost(session, model.CreateNewPost("this is a test"))
 
 	// expect
 	test.Assert(t, err == nil)
@@ -37,11 +36,11 @@ func Test_GetReplies_ForPost(t *testing.T) {
 
 	// given
 	for i := 0; i < NumberOfRepliesToCreate; i++ {
-		_, _ = replyService.CreateReply(session, createReplyModel(post))
+		_, _ = svc.CreateReply(session, createReplyModel(post))
 	}
 
 	// when
-	replies, _ := replyService.GetRepliesForPost(uuid.MustParse(post.Uuid))
+	replies, _ := svc.GetRepliesForPost(uuid.MustParse(post.Uuid))
 
 	// then
 	test.Assert(t, len(replies) == NumberOfRepliesToCreate)
@@ -49,13 +48,13 @@ func Test_GetReplies_ForPost(t *testing.T) {
 
 func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
 	// setup
+	svc := CreateTestService()
 	testUser, _ := uuid.NewRandom()
 	session := model.CreateSessionModelFromString(testUser)
-	replyService := service.CreateReplyService()
 
 	// when
 	postUuid := uuid.New()
-	response, err := replyService.CreateReply(session, &model.NewReply{
+	response, err := svc.CreateReply(session, &model.NewReply{
 		Post: model.Post{
 			Uuid: postUuid.String(),
 			Text: "",
@@ -71,13 +70,13 @@ func Test_CreateReply_Fails_WithMissing_User(t *testing.T) {
 
 func Test_CreateReply_Fails_WithMissing_Post(t *testing.T) {
 	// setup
-	testUser := createTestUser()
-	session := model.CreateSessionModelFromString(*testUser.Uuid)
-	replyService := service.CreateReplyService()
+	svc := CreateTestService()
+	user := svc.CreateUser(util.CreateTestUser())
+	session := model.CreateSessionModelFromString(*user.Uuid)
 
 	// when
 	postUuid := uuid.New()
-	response, err := replyService.CreateReply(session, &model.NewReply{
+	response, err := svc.CreateReply(session, &model.NewReply{
 		Post: model.Post{
 			Uuid: postUuid.String(),
 			Text: "",
@@ -93,10 +92,10 @@ func Test_CreateReply_Fails_WithMissing_Post(t *testing.T) {
 
 func Test_GetReplies_FailsWithMissing_Post(t *testing.T) {
 	// setup
-	replyService := service.CreateReplyService()
+	svc := CreateTestService()
 
 	// when
-	response, err := replyService.GetRepliesForPost(uuid.New())
+	response, err := svc.GetRepliesForPost(uuid.New())
 
 	// then
 	test.Assert(t, err != nil)

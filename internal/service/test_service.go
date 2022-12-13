@@ -9,6 +9,7 @@ import (
 type TestService struct {
 	userService   *UserService
 	postService   *PostService
+	replyService  *ReplyService
 	followService *FollowService
 }
 
@@ -16,6 +17,7 @@ func CreateTestService() *TestService {
 	return &TestService{
 		CreateTestUserService(),
 		CreateTestPostService(),
+		CreateTestReplyService(),
 		CreateTestFollowService(),
 	}
 }
@@ -61,4 +63,12 @@ func (t *TestService) GetUserFollows(username string) ([]*model.Follow, error) {
 
 func (t *TestService) GetUserFollowers(username string) ([]*model.Follow, error) {
 	return t.followService.GetUserFollowers(username)
+}
+
+func (t *TestService) CreateReply(session *model.Session, reply *model.NewReply) (*model.Post, error) {
+	return t.replyService.CreateReply(session, reply)
+}
+
+func (t *TestService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, error) {
+	return t.replyService.GetRepliesForPost(postUuid)
 }

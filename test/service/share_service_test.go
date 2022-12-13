@@ -11,7 +11,7 @@ const message = "this is a test"
 
 func Test_ShareService_CanCreate_NewShare(t *testing.T) {
 	// setup
-	testUser := createTestUser()
+	testUser := service.createTestUser()
 	session := model.CreateSessionModelFromString(*testUser.Uuid)
 	postService := service.CreatePostService()
 	shareService := service.CreateDefaultShareService()

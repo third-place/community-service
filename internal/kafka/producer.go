@@ -31,8 +31,8 @@ func CreateProducer() Producer {
 	return producer
 }
 
-func CreateTestProducer() (Producer, error) {
-	return &TestProducer{}, nil
+func CreateTestProducer() Producer {
+	return &TestProducer{}
 }
 
 func CreateMessage(data []byte, topic string) *kafka.Message {

@@ -10,6 +10,7 @@ import (
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
+	"github.com/third-place/community-service/internal/util"
 	"log"
 )
 
@@ -29,6 +30,18 @@ func CreateReplyService() *ReplyService {
 		repository.CreateReplyRepository(conn),
 		&SecurityService{},
 		kafka2.CreateProducer(),
+	}
+}
+
+func CreateTestReplyService() *ReplyService {
+	conn := util.SetupTestDatabase()
+	producer := kafka2.CreateTestProducer()
+	return &ReplyService{
+		repository.CreateUserRepository(conn),
+		repository.CreatePostRepository(conn),
+		repository.CreateReplyRepository(conn),
+		&SecurityService{},
+		producer,
 	}
 }
 

@@ -11,11 +11,11 @@ import (
 
 func Test_PostReport_HappyPath(t *testing.T) {
 	// setup
-	user1 := createTestUser()
+	user1 := service.createTestUser()
 	session := model.CreateSessionModelFromString(*user1.Uuid)
 	postService := service.CreatePostService()
 	post, _ := postService.CreatePost(session, model.CreateNewPost(""))
-	user2 := createTestUser()
+	user2 := service.createTestUser()
 	reportService := service.CreateDefaultReportService()
 	postUuid := uuid.MustParse(post.Uuid)
 
@@ -30,7 +30,7 @@ func Test_PostReport_HappyPath(t *testing.T) {
 func Test_PostReport_Fails_WhenPostMissing(t *testing.T) {
 	// setup
 	postUuid := uuid.New()
-	user := createTestUser()
+	user := service.createTestUser()
 	reportService := service.CreateDefaultReportService()
 
 	// when
@@ -59,14 +59,14 @@ func Test_PostReport_Fails_WhenUserMissing(t *testing.T) {
 
 func Test_ReplyReport_HappyPath(t *testing.T) {
 	// setup
-	user1 := createTestUser()
+	user1 := service.createTestUser()
 	session1 := model.CreateSessionModelFromString(*user1.Uuid)
 	postService := service.CreatePostService()
 	post, _ := postService.CreatePost(session1, model.CreateNewPost(""))
 	replyService := service.CreateReplyService()
 	postUuid := uuid.MustParse(post.Uuid)
 	reply, _ := replyService.CreateReply(session1, model.CreateNewReply(&postUuid, "test message"))
-	user2 := createTestUser()
+	user2 := service.createTestUser()
 	reportService := service.CreateDefaultReportService()
 	replyUuid := uuid.MustParse(reply.Uuid)
 

@@ -13,8 +13,8 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/rs/cors"
 	"github.com/third-place/community-service/internal"
-	"github.com/third-place/community-service/internal/kafka"
 	"github.com/third-place/community-service/internal/middleware"
+	"github.com/third-place/community-service/internal/service"
 	"log"
 	"net/http"
 )
@@ -26,7 +26,7 @@ func main() {
 
 func readKafka() {
 	log.Print("connecting to kafka")
-	kafka.InitializeAndRunLoop()
+	service.CreateConsumerService().Loop()
 	log.Print("exit kafka loop")
 }
 

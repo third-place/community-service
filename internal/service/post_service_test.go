@@ -64,7 +64,7 @@ func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 	svc := CreateTestService()
 	user1Model := util.CreateTestUser()
 
-	// given user 1 is protected
+	// given user 1 is private
 	user1Model.Visibility = model.PRIVATE
 
 	// and a few more users...

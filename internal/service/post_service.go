@@ -21,7 +21,7 @@ type PostService struct {
 	followRepository *repository.FollowRepository
 	imageRepository  *repository.ImageRepository
 	likeRepository   *repository.LikeRepository
-	kafkaWriter      kafka.Producer
+	kafkaProducer    kafka.Producer
 	securityService  *SecurityService
 }
 
@@ -34,7 +34,7 @@ func CreatePostService() *PostService {
 		followRepository: repository.CreateFollowRepository(conn),
 		imageRepository:  repository.CreateImageRepository(conn),
 		likeRepository:   repository.CreateLikeRepository(conn),
-		kafkaWriter:      producer,
+		kafkaProducer:    producer,
 		securityService:  CreateSecurityService(),
 	}
 }
@@ -48,7 +48,7 @@ func CreateTestPostService() *PostService {
 		followRepository: repository.CreateFollowRepository(conn),
 		imageRepository:  repository.CreateImageRepository(conn),
 		likeRepository:   repository.CreateLikeRepository(conn),
-		kafkaWriter:      producer,
+		kafkaProducer:    producer,
 		securityService:  CreateSecurityService(),
 	}
 }
@@ -251,7 +251,7 @@ func (p *PostService) getPostIDs(posts []*entity.Post) []uint {
 func (p *PostService) publishPostToKafka(post *model.Post) error {
 	topic := "posts"
 	data, _ := json.Marshal(post)
-	return p.kafkaWriter.Produce(kafka.CreateMessage(data, topic), nil)
+	return p.kafkaProducer.Produce(kafka.CreateMessage(data, topic), nil)
 }
 
 func (p *PostService) canSeePost(session *model.Session, post *entity.Post) bool {

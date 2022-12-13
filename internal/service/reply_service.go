@@ -19,7 +19,7 @@ type ReplyService struct {
 	postRepository  *repository.PostRepository
 	replyRepository *repository.ReplyRepository
 	securityService *SecurityService
-	kafkaWriter     kafka2.Producer
+	kafkaProducer   kafka2.Producer
 }
 
 func CreateReplyService() *ReplyService {
@@ -78,7 +78,7 @@ func (r *ReplyService) GetRepliesForPost(postUuid uuid.UUID) ([]*model.Post, err
 func (r *ReplyService) publishReplyToKafka(reply *model.Reply) error {
 	topic := "replies"
 	data, _ := json.Marshal(reply)
-	return r.kafkaWriter.Produce(
+	return r.kafkaProducer.Produce(
 		&kafka.Message{
 			Value: data,
 			TopicPartition: kafka.TopicPartition{

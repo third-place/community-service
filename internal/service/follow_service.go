@@ -19,7 +19,7 @@ import (
 type FollowService struct {
 	userRepository   *repository.UserRepository
 	followRepository *repository.FollowRepository
-	kafkaWriter      kafka2.Producer
+	kafkaProducer    kafka2.Producer
 }
 
 func CreateFollowService() *FollowService {
@@ -119,7 +119,7 @@ func (f *FollowService) DeleteFollow(followUuid uuid.UUID, userUuid uuid.UUID) e
 func (f *FollowService) publishFollowToKafka(follow *model.Follow) error {
 	topic := "follows"
 	data, _ := json.Marshal(follow)
-	return f.kafkaWriter.Produce(
+	return f.kafkaProducer.Produce(
 		&kafka.Message{
 			Value: data,
 			TopicPartition: kafka.TopicPartition{

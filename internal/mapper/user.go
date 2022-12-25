@@ -35,6 +35,5 @@ func GetUserEntityFromModel(user *model.User) *entity.User {
 		Name:       user.Name,
 		Role:       string(user.Role),
 		IsBanned:   user.IsBanned,
-		Visibility: user.Visibility,
 	}
 }

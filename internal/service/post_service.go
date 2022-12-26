@@ -71,7 +71,7 @@ func (p *PostService) GetPost(session *model.Session, postUuid uuid.UUID) (*mode
 }
 
 func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost) (*model.Post, error) {
-	user, err := p.getUser(uuid.MustParse(session.User.Uuid))
+	user, err := p.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		return nil, err
 	}
@@ -94,6 +94,10 @@ func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost)
 }
 
 func (p *PostService) UpdatePost(session *model.Session, postModel *model.Post) error {
+	_, err := p.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(session.User.Uuid))
+	if err != nil {
+		return err
+	}
 	postEntity, err := p.postRepository.FindOneByUuid(uuid.MustParse(postModel.Uuid))
 	if err != nil || !p.securityService.Owns(session, postEntity) {
 		return errors.New("user cannot update post")
@@ -106,6 +110,10 @@ func (p *PostService) UpdatePost(session *model.Session, postModel *model.Post) 
 }
 
 func (p *PostService) DeletePost(session *model.Session, postUuid uuid.UUID) error {
+	_, err := p.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(session.User.Uuid))
+	if err != nil {
+		return err
+	}
 	post, err := p.postRepository.FindOneByUuid(postUuid)
 	if err != nil {
 		return err
@@ -207,17 +215,6 @@ func (p *PostService) GetLikedPosts(session *model.Session, username string, lim
 		m.SelfLiked = true
 	}
 	return models, nil
-}
-
-func (p *PostService) getUser(sessionUuid uuid.UUID) (*entity.User, error) {
-	user, err := p.userRepository.FindOneByUuid(sessionUuid)
-	if err != nil {
-		return nil, err
-	}
-	if user.IsBanned {
-		return nil, errors.New("not allowed to create a post")
-	}
-	return user, nil
 }
 
 func (p *PostService) populateSharePosts(posts []*entity.Post) []*entity.Post {

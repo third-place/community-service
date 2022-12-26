@@ -46,7 +46,7 @@ func CreateTestReplyService() *ReplyService {
 }
 
 func (r *ReplyService) CreateReply(session *model.Session, reply *model.NewReply) (*model.Post, error) {
-	user, err := r.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
+	user, err := r.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		return nil, err
 	}

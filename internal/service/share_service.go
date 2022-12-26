@@ -39,7 +39,10 @@ func CreateTestShareService() *ShareService {
 }
 
 func (s *ShareService) CreateShare(share *model.NewShare) (*model.Share, error) {
-	user, _ := s.userRepository.FindOneByUuid(uuid.MustParse(share.User.Uuid))
+	user, err := s.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(share.User.Uuid))
+	if err != nil {
+		return nil, err
+	}
 	post, _ := s.postRepository.FindOneByUuid(uuid.MustParse(share.Post.Uuid))
 	shareEntity := entity.CreateShare(user, post, share)
 	s.shareRepository.Save(shareEntity)

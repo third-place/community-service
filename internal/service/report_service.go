@@ -38,7 +38,7 @@ func CreateTestReportService() *ReportService {
 }
 
 func (r *ReportService) CreatePostReport(newReport *model.NewPostReport) (*model.PostReport, error) {
-	user, err := r.userRepository.FindOneByUuid(uuid.MustParse(newReport.User.Uuid))
+	user, err := r.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(newReport.User.Uuid))
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (r *ReportService) CreatePostReport(newReport *model.NewPostReport) (*model
 }
 
 func (r *ReportService) CreateReplyReport(newReport *model.NewPostReport) (*model.PostReport, error) {
-	user, err := r.userRepository.FindOneByUuid(uuid.MustParse(newReport.User.Uuid))
+	user, err := r.userRepository.FindOneInGoodStandingByUuid(uuid.MustParse(newReport.User.Uuid))
 	if err != nil {
 		return nil, err
 	}

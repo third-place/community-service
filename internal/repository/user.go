@@ -34,6 +34,15 @@ func (u *UserRepository) FindOneByUuid(uuid uuid.UUID) (*entity.User, error) {
 	return user, nil
 }
 
+func (u *UserRepository) FindOneInGoodStandingByUuid(uuid uuid.UUID) (*entity.User, error) {
+	user := &entity.User{}
+	u.conn.Where("uuid = ? AND is_banned = false", uuid).Find(user)
+	if user.ID == 0 {
+		return nil, errors.New(constants.ErrorMessageUserNotFound)
+	}
+	return user, nil
+}
+
 func (u *UserRepository) FindOneByUsername(username string) (*entity.User, error) {
 	user := &entity.User{}
 	u.conn.Where("username = ?", username).Find(user)

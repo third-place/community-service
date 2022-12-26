@@ -101,14 +101,14 @@ func (f *FollowService) GetUserFollowsByUsername(username string) ([]*model.Foll
 }
 
 func (f *FollowService) DeleteFollow(followUuid uuid.UUID, userUuid uuid.UUID) error {
+	user, err := f.userRepository.FindOneInGoodStandingByUuid(userUuid)
+	if err != nil {
+		return err
+	}
 	follow := f.followRepository.FindOne(followUuid)
 	if follow == nil {
 		log.Print("follow not found :: ", followUuid)
 		return errors.New("follow not found")
-	}
-	user, err := f.userRepository.FindOneInGoodStandingByUuid(userUuid)
-	if err != nil {
-		return err
 	}
 	if follow.UserID != user.ID {
 		return errors.New("not allowed")

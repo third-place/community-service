@@ -30,11 +30,11 @@ func CreateDefaultLikeService() *LikeService {
 }
 
 func (l *LikeService) CreateLikeForPost(postUuid uuid.UUID, userUuid uuid.UUID) (*model.PostLike, error) {
-	post, err := l.postRepository.FindOneByUuid(postUuid)
+	user, err := l.userRepository.FindOneInGoodStandingByUuid(userUuid)
 	if err != nil {
 		return nil, err
 	}
-	user, err := l.userRepository.FindOneInGoodStandingByUuid(userUuid)
+	post, err := l.postRepository.FindOneByUuid(postUuid)
 	if err != nil {
 		return nil, err
 	}
@@ -49,11 +49,11 @@ func (l *LikeService) CreateLikeForPost(postUuid uuid.UUID, userUuid uuid.UUID) 
 }
 
 func (l *LikeService) DeleteLikeForPost(postUuid uuid.UUID, userUuid uuid.UUID) error {
-	post, err := l.postRepository.FindOneByUuid(postUuid)
+	user, err := l.userRepository.FindOneInGoodStandingByUuid(userUuid)
 	if err != nil {
 		return err
 	}
-	user, err := l.userRepository.FindOneInGoodStandingByUuid(userUuid)
+	post, err := l.postRepository.FindOneByUuid(postUuid)
 	if err != nil {
 		return err
 	}

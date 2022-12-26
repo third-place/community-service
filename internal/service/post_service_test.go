@@ -19,8 +19,12 @@ func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// then
-	util.Assert(t, err == nil)
-	util.Assert(t, response != nil)
+	if err != nil {
+		t.Error(err)
+	}
+	if response == nil {
+		t.Fail()
+	}
 }
 
 func Test_BannedUser_CannotCreatePost(t *testing.T) {
@@ -32,10 +36,7 @@ func Test_BannedUser_CannotCreatePost(t *testing.T) {
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// then
-	if response != nil {
-		t.Fail()
-	}
-	if err == nil {
+	if response != nil || err == nil {
 		t.Fail()
 	}
 }
@@ -67,12 +68,14 @@ func Test_PostService_Respects_ProtectedVisibility(t *testing.T) {
 	post2, err2 := svc.GetPost(session3, uuid.MustParse(response.Uuid))
 
 	// then user 2 can see
-	util.Assert(t, post1 != nil)
-	util.Assert(t, err1 == nil)
+	if post1 == nil || err1 != nil {
+		t.Fail()
+	}
 
 	// and user 3 cannot
-	util.Assert(t, post2 == nil)
-	util.Assert(t, err2 != nil)
+	if post2 != nil || err2 == nil {
+		t.Fail()
+	}
 }
 
 func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
@@ -103,16 +106,19 @@ func Test_PostService_Respects_PrivateVisibility(t *testing.T) {
 	post3, err3 := svc.GetPost(session3, uuid.MustParse(response.Uuid))
 
 	// then user 1 can see
-	util.Assert(t, post1 != nil)
-	util.Assert(t, err1 == nil)
+	if post1 == nil || err1 != nil {
+		t.Fail()
+	}
 
 	// and user 2 cannot see
-	util.Assert(t, post2 == nil)
-	util.Assert(t, err2 != nil)
+	if post2 != nil || err2 == nil {
+		t.Fail()
+	}
 
 	// and user 3 cannot see
-	util.Assert(t, post3 == nil)
-	util.Assert(t, err3 != nil)
+	if post3 != nil || err3 == nil {
+		t.Fail()
+	}
 }
 
 func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
@@ -125,8 +131,9 @@ func Test_PostService_CreateNewPost_Fails_WhenUserNotFound(t *testing.T) {
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// then
-	util.Assert(t, err != nil)
-	util.Assert(t, response == nil)
+	if response != nil || err == nil {
+		t.Fail()
+	}
 }
 
 func Test_PostService_Can_DeletePost(t *testing.T) {
@@ -140,7 +147,9 @@ func Test_PostService_Can_DeletePost(t *testing.T) {
 	err := svc.DeletePost(session, uuid.MustParse(postModel.Uuid))
 
 	// then
-	util.Assert(t, err == nil)
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func Test_PostService_CannotGet_DeletedPost(t *testing.T) {
@@ -155,8 +164,9 @@ func Test_PostService_CannotGet_DeletedPost(t *testing.T) {
 	response, err := svc.GetPost(nil, uuid.MustParse(postModel.Uuid))
 
 	// then
-	util.Assert(t, err != nil)
-	util.Assert(t, response == nil)
+	if response != nil || err == nil {
+		t.Fail()
+	}
 }
 
 func Test_GetPosts(t *testing.T) {
@@ -169,8 +179,9 @@ func Test_GetPosts(t *testing.T) {
 	posts, err := svc.GetPostsFirehose(session, constants.UserPostsDefaultPageSize)
 
 	// then
-	util.Assert(t, err == nil)
-	util.Assert(t, posts != nil)
+	if posts == nil || err != nil {
+		t.Fail()
+	}
 }
 
 func Test_GetPost(t *testing.T) {
@@ -183,15 +194,20 @@ func Test_GetPost(t *testing.T) {
 	post, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// expect
-	util.Assert(t, post != nil)
-	util.Assert(t, err == nil)
+	if post == nil || err != nil {
+		t.Fail()
+	}
 
 	// when
 	response, err := svc.GetPost(nil, uuid.MustParse(post.Uuid))
 
 	// then
-	util.Assert(t, err == nil)
-	util.Assert(t, response != nil && response.Text == message)
+	if err != nil {
+		t.Error(err)
+	}
+	if response == nil || response.Text != message {
+		t.Fail()
+	}
 }
 
 func Test_GetPost_Fails_WhenNotFound(t *testing.T) {
@@ -202,8 +218,9 @@ func Test_GetPost_Fails_WhenNotFound(t *testing.T) {
 	post, err := svc.GetPost(nil, uuid.New())
 
 	// then
-	util.Assert(t, err != nil)
-	util.Assert(t, post == nil)
+	if post != nil || err == nil {
+		t.Fail()
+	}
 }
 
 func Test_PostService_GetUserPosts(t *testing.T) {
@@ -221,7 +238,9 @@ func Test_PostService_GetUserPosts(t *testing.T) {
 	posts, _ := svc.GetPostsForUser(session, user.Username, constants.UserPostsDefaultPageSize)
 
 	// then
-	util.Assert(t, len(posts) == 5)
+	if len(posts) != 5 {
+		t.Fail()
+	}
 }
 
 func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
@@ -242,8 +261,9 @@ func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	posts, err := svc.GetPostsForUser(session, testUserUuid.String(), constants.UserPostsDefaultPageSize)
 
 	// then
-	util.Assert(t, posts == nil)
-	util.Assert(t, err != nil)
+	if posts != nil || err == nil {
+		t.Fail()
+	}
 }
 
 func Test_CanGetPosts_ForUserFollows(t *testing.T) {
@@ -269,6 +289,7 @@ func Test_CanGetPosts_ForUserFollows(t *testing.T) {
 	)
 
 	// then -- expect to see posts from alice
-	util.Assert(t, err == nil)
-	util.Assert(t, len(posts) >= 5)
+	if err != nil || len(posts) < 5 {
+		t.Fail()
+	}
 }

@@ -1,4 +1,4 @@
-package ownable
+package util
 
 type Ownable interface {
 	GetOwnerUUID() string

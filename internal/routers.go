@@ -12,6 +12,7 @@ package internal
 import (
 	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/controller"
+	"github.com/third-place/community-service/internal/util"
 	"net/http"
 	"strings"
 )
@@ -30,7 +31,7 @@ func NewRouter() *mux.Router {
 	for _, route := range routes {
 		var handler http.Handler
 		handler = route.HandlerFunc
-		handler = Logger(handler, route.Name)
+		handler = util.Logger(handler, route.Name)
 
 		router.
 			Methods(route.Method).

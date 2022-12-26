@@ -71,12 +71,9 @@ func (p *PostService) GetPost(session *model.Session, postUuid uuid.UUID) (*mode
 }
 
 func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost) (*model.Post, error) {
-	user, err := p.userRepository.FindOneByUuid(uuid.MustParse(session.User.Uuid))
+	user, err := p.getUser(uuid.MustParse(session.User.Uuid))
 	if err != nil {
 		return nil, err
-	}
-	if user.IsBanned {
-		return nil, errors.New("not allowed to create a post")
 	}
 	post := entity.CreatePost(user, newPost)
 	p.postRepository.Create(post)
@@ -210,6 +207,17 @@ func (p *PostService) GetLikedPosts(session *model.Session, username string, lim
 		m.SelfLiked = true
 	}
 	return models, nil
+}
+
+func (p *PostService) getUser(sessionUuid uuid.UUID) (*entity.User, error) {
+	user, err := p.userRepository.FindOneByUuid(sessionUuid)
+	if err != nil {
+		return nil, err
+	}
+	if user.IsBanned {
+		return nil, errors.New("not allowed to create a post")
+	}
+	return user, nil
 }
 
 func (p *PostService) populateSharePosts(posts []*entity.Post) []*entity.Post {

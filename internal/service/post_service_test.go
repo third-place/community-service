@@ -36,7 +36,7 @@ func Test_BannedUser_CannotCreatePost(t *testing.T) {
 	response, err := svc.CreatePost(session, model.CreateNewPost(message))
 
 	// then
-	if response != nil || err == nil {
+	if response != nil || err == nil || err.Error() != "not allowed to create a post" {
 		t.Fail()
 	}
 }

@@ -42,7 +42,7 @@ func CreateTestFollowService() *FollowService {
 }
 
 func (f *FollowService) CreateFollow(sessionUserUuid uuid.UUID, follow *model.NewFollow) (*model.Follow, error) {
-	user, err := f.userRepository.FindOneByUuid(sessionUserUuid)
+	user, err := f.userRepository.FindOneInGoodStandingByUuid(sessionUserUuid)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +106,10 @@ func (f *FollowService) DeleteFollow(followUuid uuid.UUID, userUuid uuid.UUID) e
 		log.Print("follow not found :: ", followUuid)
 		return errors.New("follow not found")
 	}
-	user, _ := f.userRepository.FindOneByUuid(userUuid)
+	user, err := f.userRepository.FindOneInGoodStandingByUuid(userUuid)
+	if err != nil {
+		return err
+	}
 	if follow.UserID != user.ID {
 		return errors.New("not allowed")
 	}

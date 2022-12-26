@@ -34,7 +34,7 @@ func (l *LikeService) CreateLikeForPost(postUuid uuid.UUID, userUuid uuid.UUID) 
 	if err != nil {
 		return nil, err
 	}
-	user, err := l.userRepository.FindOneByUuid(userUuid)
+	user, err := l.userRepository.FindOneInGoodStandingByUuid(userUuid)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (l *LikeService) DeleteLikeForPost(postUuid uuid.UUID, userUuid uuid.UUID) 
 	if err != nil {
 		return err
 	}
-	user, err := l.userRepository.FindOneByUuid(userUuid)
+	user, err := l.userRepository.FindOneInGoodStandingByUuid(userUuid)
 	if err != nil {
 		return err
 	}

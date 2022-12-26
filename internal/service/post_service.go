@@ -75,6 +75,9 @@ func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost)
 	if err != nil {
 		return nil, err
 	}
+	if user.IsBanned {
+		return nil, errors.New("not allowed to create a post")
+	}
 	post := entity.CreatePost(user, newPost)
 	p.postRepository.Create(post)
 	var imageEntities []*entity.Image
@@ -83,7 +86,10 @@ func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost)
 		p.imageRepository.Create(imageEntity)
 		imageEntities = append(imageEntities, imageEntity)
 	}
-	search, _ := p.postRepository.FindOneByUuid(*post.Uuid)
+	search, err := p.postRepository.FindOneByUuid(*post.Uuid)
+	if err != nil {
+		return nil, err
+	}
 	postsWithShare := p.populateSharePosts([]*entity.Post{search})
 	postModel := mapper.GetPostModelFromEntity(postsWithShare[0])
 	err = p.publishPostToKafka(postModel)

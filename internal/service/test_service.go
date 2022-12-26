@@ -36,6 +36,13 @@ func (t TestService) CreateTestUserSession() *model.Session {
 	return model.CreateSession(*userEntity.Uuid)
 }
 
+func (t TestService) CreateTestBannedUserSession() *model.Session {
+	userModel := util.CreateTestUser()
+	userModel.IsBanned = true
+	userEntity := t.CreateUser(userModel)
+	return model.CreateSession(*userEntity.Uuid)
+}
+
 func (t *TestService) GetUser(userUuid uuid.UUID) (*model.User, error) {
 	return t.userService.GetUser(userUuid)
 }

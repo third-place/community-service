@@ -23,6 +23,23 @@ func Test_PostService_CreatePublic_NewPost(t *testing.T) {
 	util.Assert(t, response != nil)
 }
 
+func Test_BannedUser_CannotCreatePost(t *testing.T) {
+	// setup
+	svc := CreateTestService()
+	session := svc.CreateTestBannedUserSession()
+
+	// when
+	response, err := svc.CreatePost(session, model.CreateNewPost(message))
+
+	// then
+	if response != nil {
+		t.Fail()
+	}
+	if err == nil {
+		t.Fail()
+	}
+}
+
 func Test_PostService_Respects_ProtectedVisibility(t *testing.T) {
 	// setup
 	svc := CreateTestService()

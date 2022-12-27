@@ -1,0 +1,1 @@
+openapi-generator generate -i api.yaml -g go-gin-server -o build/

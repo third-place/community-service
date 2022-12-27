@@ -1,1 +1,0 @@
-openapi-generator generate -i api.yaml -g go-server -o build/

@@ -1,26 +1,24 @@
 package controller
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/gorilla/feeds"
-	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/util"
-	uuid2 "github.com/third-place/community-service/internal/uuid"
 	"net/http"
 	"time"
 )
 
 // GetUserPostsRSSV1 - get posts by a user in rss format
-func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "max-age=30")
-	params := mux.Vars(r)
-	username := params["username"]
-	session, _ := util.GetSession(r.Header.Get("x-session-token"))
+func GetUserPostsRSSV1(c *gin.Context) {
+	c.Header("Cache-Control", "max-age=30")
+	username := c.Param("username")
+	session, _ := util.GetSession(c)
 	user, err := service.CreateUserService().GetUserByUsername(username)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		c.Status(http.StatusNotFound)
 		return
 	}
 	nameToShow := "@" + username
@@ -51,31 +49,32 @@ func GetUserPostsRSSV1(w http.ResponseWriter, r *http.Request) {
 	feed.Items = feedItems
 	data, err := feed.ToRss()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		c.Status(http.StatusInternalServerError)
 		return
 	}
-	_, _ = w.Write([]byte(data))
+	c.JSON(http.StatusOK, data)
 }
 
 // GetUserPostsV1 - get posts by a user
-func GetUserPostsV1(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "max-age=30")
-	params := mux.Vars(r)
-	username := params["username"]
-	session, _ := util.GetSession(r.Header.Get("x-session-token"))
+func GetUserPostsV1(c *gin.Context) {
+	c.Header("Cache-Control", "max-age=30")
+	username := c.Param("username")
+	session, _ := util.GetSession(c)
 	posts, _ := service.CreatePostService().GetPostsForUser(
 		session,
 		username,
 		constants.UserPostsDefaultPageSize,
 	)
-	data, _ := json.Marshal(posts)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusOK, posts)
 }
 
 // GetSuggestedFollowsForUserV1 - Get suggested follows for user
-func GetSuggestedFollowsForUserV1(w http.ResponseWriter, r *http.Request) {
-	users := service.CreateUserService().
-		GetSuggestedFollowsForUser(uuid2.GetUuidFromPathSecondPosition(r.URL.Path))
-	data, _ := json.Marshal(users)
-	_, _ = w.Write(data)
+func GetSuggestedFollowsForUserV1(c *gin.Context) {
+	uuidParam, err := uuid.Parse(c.Param("uuid"))
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	users := service.CreateUserService().GetSuggestedFollowsForUser(uuidParam)
+	c.JSON(http.StatusOK, users)
 }

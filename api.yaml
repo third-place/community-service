@@ -181,7 +181,7 @@ paths:
             404 response
   /reply:
     post:
-      operationId: createAReplyV1
+      operationId: createReplyV1
       summary: create a reply
       requestBody:
         description: reply to create
@@ -229,7 +229,7 @@ paths:
                   $ref: '#/components/schemas/ReplyLike'
   /report/post:
     post:
-      operationId: createAPostReportV1
+      operationId: createPostReportV1
       summary: create a post report
       requestBody:
         description: post report to create
@@ -244,7 +244,7 @@ paths:
             201 response
   /report/reply:
     post:
-      operationId: createAReplyReportV1
+      operationId: createReplyReportV1
       summary: create a reply report
       requestBody:
         description: reply report to create

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/util"
@@ -9,35 +9,33 @@ import (
 )
 
 // CreatePostReportV1 - report a post
-func CreatePostReportV1(w http.ResponseWriter, r *http.Request) {
-	_, err := util.GetSession(r.Header.Get("x-session-token"))
+func CreatePostReportV1(c *gin.Context) {
+	_, err := util.GetSession(c)
 	if err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		c.Status(http.StatusForbidden)
 		return
 	}
-	newReport := model.DecodeRequestToNewPostReport(r)
+	newReport := model.DecodeRequestToNewPostReport(c.Request)
 	report, err := service.CreateReportService().CreatePostReport(newReport)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	data, _ := json.Marshal(report)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusOK, report)
 }
 
 // CreateReplyReportV1 - report a reply
-func CreateReplyReportV1(w http.ResponseWriter, r *http.Request) {
-	_, err := util.GetSession(r.Header.Get("x-session-token"))
+func CreateReplyReportV1(c *gin.Context) {
+	_, err := util.GetSession(c)
 	if err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		c.Status(http.StatusForbidden)
 		return
 	}
-	newReport := model.DecodeRequestToNewPostReport(r)
+	newReport := model.DecodeRequestToNewPostReport(c.Request)
 	replyReport, err := service.CreateReportService().CreateReplyReport(newReport)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	data, _ := json.Marshal(replyReport)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusOK, replyReport)
 }

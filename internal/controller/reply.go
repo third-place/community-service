@@ -1,37 +1,39 @@
 package controller
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/util"
-	iUuid "github.com/third-place/community-service/internal/uuid"
 	"net/http"
 )
 
-// CreateAReplyV1 - create a reply
-func CreateAReplyV1(w http.ResponseWriter, r *http.Request) {
-	session, err := util.GetSession(r.Header.Get("x-session-token"))
+// CreateReplyV1 - create a reply
+func CreateReplyV1(c *gin.Context) {
+	session, err := util.GetSession(c)
 	if err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		c.Status(http.StatusForbidden)
 		return
 	}
-	newReplyModel := model.DecodeRequestToNewReply(r)
+	newReplyModel := model.DecodeRequestToNewReply(c.Request)
 	reply, err := service.CreateReplyService().CreateReply(session, newReplyModel)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 	}
-	data, _ := json.Marshal(reply)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusOK, reply)
 }
 
-func GetPostRepliesV1(w http.ResponseWriter, r *http.Request) {
-	postUuid := iUuid.GetUuidFromPathSecondPosition(r.URL.Path)
-	replies, err := service.CreateReplyService().GetRepliesForPost(postUuid)
+func GetPostRepliesV1(c *gin.Context) {
+	postUuid, err := uuid.Parse(c.Param("uuid"))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	data, _ := json.Marshal(replies)
-	_, _ = w.Write(data)
+	replies, err := service.CreateReplyService().GetRepliesForPost(postUuid)
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	c.JSON(http.StatusOK, replies)
 }

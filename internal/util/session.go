@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/third-place/community-service/internal/model"
@@ -10,7 +11,8 @@ import (
 
 var jwtKey = []byte(os.Getenv("JWT_KEY"))
 
-func GetSession(sessionToken string) (*model.Session, error) {
+func GetSession(c *gin.Context) (*model.Session, error) {
+	sessionToken := c.GetHeader("x-session-token")
 	claims := &model.Claims{}
 	token, err := jwt.ParseWithClaims(sessionToken, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil

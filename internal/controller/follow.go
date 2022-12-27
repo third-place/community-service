@@ -1,77 +1,72 @@
 package controller
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/mapper"
 	"github.com/third-place/community-service/internal/service"
 	"github.com/third-place/community-service/internal/util"
-	iUuid "github.com/third-place/community-service/internal/uuid"
 	"log"
 	"net/http"
 )
 
 // CreateFollowV1 - create a follow
-func CreateFollowV1(w http.ResponseWriter, r *http.Request) {
-	newFollowModel, err := mapper.DecodeRequestToNewFollow(r)
+func CreateFollowV1(c *gin.Context) {
+	newFollowModel, err := mapper.DecodeRequestToNewFollow(c.Request)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	session, err := util.GetSession(r.Header.Get("x-session-token"))
+	session, err := util.GetSession(c)
 	if err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		c.Status(http.StatusForbidden)
 		return
 	}
 	follow, err := service.CreateFollowService().CreateFollow(uuid.MustParse(session.User.Uuid), newFollowModel)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
-	data, _ := json.Marshal(follow)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusCreated, follow)
 }
 
 // GetUserFollowersV1 - get user followers
-func GetUserFollowersV1(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	username := params["username"]
+func GetUserFollowersV1(c *gin.Context) {
+	username := c.Param("username")
 	follows, err := service.CreateFollowService().GetUserFollowers(username)
 	if err != nil {
-		log.Print("error received from get user follows :: ", err)
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	data, _ := json.Marshal(follows)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusOK, follows)
 }
 
 // GetUserFollowsV1 - get user follows
-func GetUserFollowsV1(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	username := params["username"]
+func GetUserFollowsV1(c *gin.Context) {
+	username := c.Param("username")
 	follows, err := service.CreateFollowService().GetUserFollows(username)
 	if err != nil {
 		log.Print("error received from get user follows :: ", err)
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
-	data, _ := json.Marshal(follows)
-	_, _ = w.Write(data)
+	c.JSON(http.StatusOK, follows)
 }
 
 // DeleteFollowV1 - delete a follow
-func DeleteFollowV1(w http.ResponseWriter, r *http.Request) {
-	session, err := util.GetSession(r.Header.Get("x-session-token"))
+func DeleteFollowV1(c *gin.Context) {
+	session, err := util.GetSession(c)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		c.Status(http.StatusUnauthorized)
 		return
 	}
-	followUuid := iUuid.GetUuidFromPathSecondPosition(r.URL.Path)
+	followUuid, err := uuid.Parse(c.Param("uuid"))
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
 	err = service.CreateFollowService().DeleteFollow(followUuid, uuid.MustParse(session.User.Uuid))
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 	}
 }

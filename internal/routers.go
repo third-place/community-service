@@ -10,34 +10,43 @@
 package internal
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/third-place/community-service/internal/controller"
-	"github.com/third-place/community-service/internal/util"
 	"net/http"
-	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
+// Route is the information for every URI.
 type Route struct {
-	Name        string
-	Method      string
-	Pattern     string
-	HandlerFunc http.HandlerFunc
+	// Name is the name of this Route.
+	Name string
+	// Method is the string for the HTTP method. ex) GET, POST etc..
+	Method string
+	// Pattern is the pattern of the URI.
+	Pattern string
+	// HandlerFunc is the handler function of this route.
+	HandlerFunc gin.HandlerFunc
 }
 
+// Routes is the list of the generated Route.
 type Routes []Route
 
-func NewRouter() *mux.Router {
-	router := mux.NewRouter().StrictSlash(true)
+// NewRouter returns a new router.
+func NewRouter() *gin.Engine {
+	router := gin.Default()
 	for _, route := range routes {
-		var handler http.Handler
-		handler = route.HandlerFunc
-		handler = util.Logger(handler, route.Name)
-
-		router.
-			Methods(route.Method).
-			Path(route.Pattern).
-			Name(route.Name).
-			Handler(handler)
+		switch route.Method {
+		case http.MethodGet:
+			router.GET(route.Pattern, route.HandlerFunc)
+		case http.MethodPost:
+			router.POST(route.Pattern, route.HandlerFunc)
+		case http.MethodPut:
+			router.PUT(route.Pattern, route.HandlerFunc)
+		case http.MethodPatch:
+			router.PATCH(route.Pattern, route.HandlerFunc)
+		case http.MethodDelete:
+			router.DELETE(route.Pattern, route.HandlerFunc)
+		}
 	}
 
 	return router
@@ -45,146 +54,190 @@ func NewRouter() *mux.Router {
 
 var routes = Routes{
 	{
-		"CreateAReplyV1",
-		strings.ToUpper("Post"),
-		"/reply",
-		controller.CreateAReplyV1,
+		"CreateAPostReportV1",
+		http.MethodPost,
+		"/report/post",
+		controller.CreatePostReportV1,
 	},
+
 	{
 		"CreateAReplyReportV1",
-		strings.ToUpper("Post"),
+		http.MethodPost,
 		"/report/reply",
 		controller.CreateReplyReportV1,
 	},
+
 	{
-		"CreateAPostReport",
-		strings.ToUpper("Post"),
-		"/report",
-		controller.CreatePostReportV1,
+		"CreateAReplyV1",
+		http.MethodPost,
+		"/reply",
+		controller.CreateReplyV1,
 	},
-	{
-		"CreateAShare",
-		strings.ToUpper("Post"),
-		"/share",
-		controller.CreateShareV1,
-	},
+
 	{
 		"CreateFollowV1",
-		strings.ToUpper("Post"),
+		http.MethodPost,
 		"/follow",
 		controller.CreateFollowV1,
 	},
-	{
-		"GetSharesV1",
-		strings.ToUpper("Get"),
-		"/share",
-		controller.GetSharesV1,
-	},
+
 	{
 		"CreateNewPostLikeV1",
-		strings.ToUpper("Post"),
-		"/post/{uuid}/like",
+		http.MethodPost,
+		"/post/:uuid/like",
 		controller.CreateNewPostLikeV1,
 	},
+
 	{
 		"CreateNewPostV1",
-		strings.ToUpper("Post"),
+		http.MethodPost,
 		"/post",
 		controller.CreateNewPostV1,
 	},
+
+	//{
+	//	"CreateNewReplyLikeV1",
+	//	http.MethodPost,
+	//	"/reply/:uuid/like",
+	//	controller.CreateNewReplyLikeV1,
+	//},
+
+	{
+		"CreateShareV1",
+		http.MethodPost,
+		"/share",
+		controller.CreateShareV1,
+	},
+
 	{
 		"DeleteFollowV1",
-		strings.ToUpper("Delete"),
-		"/follow/{uuid}",
+		http.MethodDelete,
+		"/follow/:uuid",
 		controller.DeleteFollowV1,
 	},
+
 	{
 		"DeleteLikeForPostV1",
-		strings.ToUpper("Delete"),
-		"/post/{uuid}/like",
+		http.MethodDelete,
+		"/post/:uuid/like",
 		controller.DeleteLikeForPostV1,
 	},
+
 	{
 		"DeletePostV1",
-		strings.ToUpper("Delete"),
-		"/post/{uuid}",
+		http.MethodDelete,
+		"/post/:uuid",
 		controller.DeletePostV1,
 	},
+
 	{
 		"GetDraftPostsV1",
-		strings.ToUpper("Get"),
+		http.MethodGet,
 		"/post/draft",
 		controller.GetDraftPostsV1,
 	},
+
 	{
 		"GetLikedPostsV1",
-		strings.ToUpper("Get"),
-		"/likes/{username}",
+		http.MethodGet,
+		"/likes/:username",
 		controller.GetLikedPostsV1,
 	},
+
+	//{
+	//	"GetLikesForPostV1",
+	//	http.MethodGet,
+	//	"/post/:uuid/like",
+	//	controller.GetLikesForPostV1,
+	//},
+
+	//{
+	//	"GetLikesForReplyV1",
+	//	http.MethodGet,
+	//	"/reply/:uuid/like",
+	//	controller.GetLikesForReplyV1,
+	//},
+
+	{
+		"GetPostRepliesV1",
+		http.MethodGet,
+		"/post/:uuid/reply",
+		controller.GetPostRepliesV1,
+	},
+
+	{
+		"GetPostV1",
+		http.MethodGet,
+		"/post/:uuid",
+		controller.GetPostV1,
+	},
+
 	{
 		"GetPostsFirehoseV1",
-		strings.ToUpper("Get"),
+		http.MethodGet,
 		"/post",
 		controller.GetPostsFirehoseV1,
 	},
-	{
-		"GetPostV1",
-		strings.ToUpper("Get"),
-		"/post/{uuid}",
-		controller.GetPostV1,
-	},
-	{
-		"GetPostRepliesV1",
-		strings.ToUpper("Get"),
-		"/post/{uuid}/replies",
-		controller.GetPostRepliesV1,
-	},
-	{
-		"GetShareV1",
-		strings.ToUpper("Get"),
-		"/share/{uuid}",
-		controller.GetShareV1,
-	},
-	{
-		"GetSuggestedFollowsForUserV1",
-		strings.ToUpper("Get"),
-		"/suggested-follows/{user}",
-		controller.GetSuggestedFollowsForUserV1,
-	},
-	{
-		"GetUserFollowersV1",
-		strings.ToUpper("Get"),
-		"/followers/{username}",
-		controller.GetUserFollowersV1,
-	},
-	{
-		"GetUserFollowsV1",
-		strings.ToUpper("Get"),
-		"/follows/{username}",
-		controller.GetUserFollowsV1,
-	},
+
 	{
 		"GetPostsForUserFollowsV1",
-		strings.ToUpper("Get"),
-		"/follow-posts/{username}",
+		http.MethodGet,
+		"/follow-posts/:username",
 		controller.GetPostsForUserFollowsV1,
 	},
+
+	{
+		"GetShareV1",
+		http.MethodGet,
+		"/share/:uuid",
+		controller.GetShareV1,
+	},
+
+	{
+		"GetSharesV1",
+		http.MethodGet,
+		"/share",
+		controller.GetSharesV1,
+	},
+
+	{
+		"GetSuggestedFollowsForUserV1",
+		http.MethodGet,
+		"/suggested-follows/:username",
+		controller.GetSuggestedFollowsForUserV1,
+	},
+
+	{
+		"GetUserFollowersV1",
+		http.MethodGet,
+		"/followers/:username",
+		controller.GetUserFollowersV1,
+	},
+
+	{
+		"GetUserFollowsV1",
+		http.MethodGet,
+		"/follows/:username",
+		controller.GetUserFollowsV1,
+	},
+
 	{
 		"GetUserPostsRSSV1",
-		strings.ToUpper("Get"),
-		"/posts/{username}/rss",
+		http.MethodGet,
+		"/posts/:username/rss",
 		controller.GetUserPostsRSSV1,
 	},
+
 	{
 		"GetUserPostsV1",
-		strings.ToUpper("Get"),
-		"/posts/{username}",
+		http.MethodGet,
+		"/posts/:username",
 		controller.GetUserPostsV1,
 	},
+
 	{
 		"UpdatePostV1",
-		strings.ToUpper("Put"),
+		http.MethodPut,
 		"/post",
 		controller.UpdatePostV1,
 	},

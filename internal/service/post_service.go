@@ -89,7 +89,7 @@ func (p *PostService) CreatePost(session *model.Session, newPost *model.NewPost)
 	}
 	postsWithShare := p.populateSharePosts([]*entity.Post{search})
 	postModel := mapper.GetPostModelFromEntity(postsWithShare[0])
-	err = p.publishPostToKafka(postModel)
+	err = p.PublishPostToKafka(postModel)
 	return postModel, err
 }
 
@@ -105,7 +105,7 @@ func (p *PostService) UpdatePost(session *model.Session, postModel *model.Post) 
 	postEntity.Text = postModel.Text
 	postEntity.Draft = postModel.Draft
 	p.postRepository.Save(postEntity)
-	err = p.publishPostToKafka(postModel)
+	err = p.PublishPostToKafka(postModel)
 	return nil
 }
 
@@ -123,7 +123,7 @@ func (p *PostService) DeletePost(session *model.Session, postUuid uuid.UUID) err
 	}
 	p.postRepository.Delete(post)
 	postModel := mapper.GetPostModelFromEntity(post)
-	err = p.publishPostToKafka(postModel)
+	err = p.PublishPostToKafka(postModel)
 	return nil
 }
 
@@ -259,7 +259,7 @@ func (p *PostService) getPostIDs(posts []*entity.Post) []uint {
 	return postIDs
 }
 
-func (p *PostService) publishPostToKafka(post *model.Post) error {
+func (p *PostService) PublishPostToKafka(post *model.Post) error {
 	topic := "posts"
 	data, _ := json.Marshal(post)
 	return p.kafkaProducer.Produce(kafka.CreateMessage(data, topic), nil)

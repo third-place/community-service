@@ -83,6 +83,22 @@ func (p *PostRepository) FindOneByUuid(uuid uuid.UUID) (*entity.Post, error) {
 	return post, nil
 }
 
+func (p *PostRepository) FindOneById(id uint) (*entity.Post, error) {
+	post := &entity.Post{}
+	p.conn.
+		Preload("User").
+		Preload("Images").
+		Preload("SharePost").
+		Table("posts").
+		Joins("JOIN users ON posts.user_id = users.id").
+		Where("posts.id = ? AND users.is_banned = false AND posts.deleted_at IS NULL", id).
+		Find(post)
+	if post.ID == 0 {
+		return nil, errors.New(constants.ErrorMessagePostNotFound)
+	}
+	return post, nil
+}
+
 func (p *PostRepository) FindByUserFollows(username string, limit int) []*entity.Post {
 	var posts []*entity.Post
 	p.conn.

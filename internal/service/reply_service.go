@@ -80,7 +80,7 @@ func (r *ReplyService) GetReply(replyUuid uuid.UUID) (*model.Reply, error) {
 	if err != nil {
 		return nil, err
 	}
-	post, err := r.postRepository.FindOneById(reply.ReplyToPostID)
+	post, err := r.postRepository.FindOneById(*reply.ReplyToPostID)
 	if err != nil {
 		return nil, err
 	}

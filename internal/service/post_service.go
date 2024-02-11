@@ -222,9 +222,9 @@ func (p *PostService) populateSharePosts(posts []*entity.Post) []*entity.Post {
 	postMap := make(map[uint]int)
 	j := 0
 	for i, post := range posts {
-		if post.SharePostID != 0 {
-			postIDs[j] = post.SharePostID
-			postMap[post.SharePostID] = i
+		if post.SharePostID != nil {
+			postIDs[j] = *post.SharePostID
+			postMap[*post.SharePostID] = i
 			j += 1
 		}
 	}

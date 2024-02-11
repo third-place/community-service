@@ -44,7 +44,7 @@ func (p *PostRepository) FindByUser(user *entity.User, limit int, draft bool) []
 		Preload("SharePost").
 		Table("posts").
 		Joins("JOIN users ON posts.user_id = users.id").
-		Where("posts.user_id = ? AND users.is_banned = false AND posts.deleted_at IS NULL AND posts.reply_to_post_id = 0 AND posts.draft = ?", user.ID, draft).
+		Where("posts.user_id = ? AND users.is_banned = false AND posts.deleted_at IS NULL AND posts.reply_to_post_id IS NULL AND posts.draft = ?", user.ID, draft).
 		Order("posts.id desc").
 		Limit(limit).
 		Find(&posts)
@@ -60,7 +60,7 @@ func (p *PostRepository) FindByLikes(user *entity.User, limit int) []*entity.Pos
 		Table("posts").
 		Joins("join post_likes on post_likes.post_id = posts.id").
 		Joins("JOIN users ON posts.user_id = users.id").
-		Where("post_likes.user_id = ? AND users.is_banned = false AND posts.deleted_at IS NULL AND posts.reply_to_post_id = 0 AND posts.draft = false", user.ID).
+		Where("post_likes.user_id = ? AND users.is_banned = false AND posts.deleted_at IS NULL AND posts.reply_to_post_id IS NULL AND posts.draft = false", user.ID).
 		Order("posts.id desc").
 		Limit(limit).
 		Find(&posts)
@@ -108,7 +108,7 @@ func (p *PostRepository) FindByUserFollows(username string, limit int) []*entity
 		Table("posts").
 		Joins("join follows on follows.following_id = posts.user_id").
 		Joins("join users on follows.user_id = users.id").
-		Where("users.username = ? AND users.is_banned = false AND posts.deleted_at IS NULL AND posts.reply_to_post_id = 0 AND posts.draft = false", username).
+		Where("users.username = ? AND users.is_banned = false AND posts.deleted_at IS NULL AND posts.reply_to_post_id IS NULL AND posts.draft = false", username).
 		Order("id desc").
 		Limit(limit).
 		Find(&posts)

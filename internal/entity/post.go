@@ -17,11 +17,11 @@ type Post struct {
 	Images        []*Image
 	Likes         uint
 	Replies       uint
-	ThreadPostID  uint `gorm:"foreignkey:Post;default:null"`
+	ThreadPostID  *uint `gorm:"foreignkey:Post;default:null"`
 	ThreadPost    *Post
-	ReplyToPostID uint `gorm:"foreignkey:Post;default:null"`
+	ReplyToPostID *uint `gorm:"foreignkey:Post;default:null"`
 	ReplyToPost   *Post
-	SharePostID   uint `gorm:"foreignkey:Post;default:null"`
+	SharePostID   *uint `gorm:"foreignkey:Post;default:null"`
 	SharePost     *Post
 }
 
@@ -32,10 +32,13 @@ func (p *Post) GetOwnerUUID() string {
 func CreatePost(user *User, post *model.NewPost) *Post {
 	postUuid := uuid.New()
 	return &Post{
-		Uuid:   &postUuid,
-		UserID: user.ID,
-		Text:   post.Text,
-		Draft:  post.Draft,
+		Uuid:          &postUuid,
+		UserID:        user.ID,
+		Text:          post.Text,
+		Draft:         post.Draft,
+		ThreadPostID:  nil,
+		ReplyToPostID: nil,
+		SharePostID:   nil,
 	}
 }
 
@@ -47,7 +50,7 @@ func CreateShare(user *User, post *Post, share *model.NewShare) *Post {
 		User:        user,
 		Text:        share.Text,
 		SharePost:   post,
-		SharePostID: post.ID,
+		SharePostID: &post.ID,
 	}
 }
 
@@ -55,7 +58,7 @@ func CreateReply(user *User, post *Post, reply *model.NewReply) *Post {
 	return &Post{
 		Text:          reply.Text,
 		ReplyToPost:   post,
-		ReplyToPostID: post.ID,
+		ReplyToPostID: &post.ID,
 		UserID:        user.ID,
 		User:          user,
 	}

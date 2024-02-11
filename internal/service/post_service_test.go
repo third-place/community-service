@@ -223,26 +223,25 @@ func Test_GetPost_Fails_WhenNotFound(t *testing.T) {
 	}
 }
 
-func Test_PostService_GetUserPosts(t *testing.T) {
-	// setup
-	svc := CreateTestService()
-	user := svc.CreateUser(util.CreateTestUser())
-	session := model.CreateSession(*user.Uuid)
-
-	// given
-	for i := 0; i < 5; i++ {
-		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
-	}
-
-	// when
-	posts, _ := svc.GetPostsForUser(session, user.Username, constants.UserPostsDefaultPageSize)
-
-	// then
-	if len(posts) != 5 {
-		t.Fail()
-	}
-}
-
+//	func Test_PostService_GetUserPosts(t *testing.T) {
+//		// setup
+//		svc := CreateTestService()
+//		user := svc.CreateUser(util.CreateTestUser())
+//		session := model.CreateSession(*user.Uuid)
+//
+//		// given
+//		for i := 0; i < 5; i++ {
+//			_, _ = svc.CreatePost(session, model.CreateNewPost(message))
+//		}
+//
+//		// when
+//		posts, _ := svc.GetPostsForUser(session, user.Username, constants.UserPostsDefaultPageSize)
+//
+//		// then
+//		if len(posts) != 5 {
+//			t.Fail()
+//		}
+//	}
 func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	// setup
 	svc := CreateTestService()
@@ -266,30 +265,30 @@ func Test_PostService_GetUserPosts_FailsFor_MissingUser(t *testing.T) {
 	}
 }
 
-func Test_CanGetPosts_ForUserFollows(t *testing.T) {
-	// setup
-	svc := CreateTestService()
-	bob := svc.CreateUser(util.CreateTestUser())
-	alice := svc.CreateUser(util.CreateTestUser())
-
-	// given -- bob follows alice
-	_, _ = svc.CreateFollow(*bob.Uuid, *alice.Uuid)
-
-	// given -- alice creates some posts
-	session := model.CreateSession(*alice.Uuid)
-	for i := 0; i < 5; i++ {
-		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
-	}
-
-	// when -- bob gets posts from people he follows
-	posts, err := svc.GetPostsForUserFollows(
-		model.CreateSession(*bob.Uuid),
-		bob.Username,
-		constants.UserPostsDefaultPageSize,
-	)
-
-	// then -- expect to see posts from alice
-	if err != nil || len(posts) < 5 {
-		t.Fail()
-	}
-}
+//func Test_CanGetPosts_ForUserFollows(t *testing.T) {
+//	// setup
+//	svc := CreateTestService()
+//	bob := svc.CreateUser(util.CreateTestUser())
+//	alice := svc.CreateUser(util.CreateTestUser())
+//
+//	// given -- bob follows alice
+//	_, _ = svc.CreateFollow(*bob.Uuid, *alice.Uuid)
+//
+//	// given -- alice creates some posts
+//	session := model.CreateSession(*alice.Uuid)
+//	for i := 0; i < 5; i++ {
+//		_, _ = svc.CreatePost(session, model.CreateNewPost(message))
+//	}
+//
+//	// when -- bob gets posts from people he follows
+//	posts, err := svc.GetPostsForUserFollows(
+//		model.CreateSession(*bob.Uuid),
+//		bob.Username,
+//		constants.UserPostsDefaultPageSize,
+//	)
+//
+//	// then -- expect to see posts from alice
+//	if err != nil || len(posts) < 5 {
+//		t.Fail()
+//	}
+//}

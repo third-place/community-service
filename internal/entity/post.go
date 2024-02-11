@@ -2,8 +2,8 @@ package entity
 
 import (
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"github.com/third-place/community-service/internal/model"
+	"gorm.io/gorm"
 )
 
 type Post struct {
@@ -17,11 +17,11 @@ type Post struct {
 	Images        []*Image
 	Likes         uint
 	Replies       uint
-	ThreadPostID  uint `gorm:"foreignkey:Post"`
+	ThreadPostID  uint `gorm:"foreignkey:Post;default:null"`
 	ThreadPost    *Post
-	ReplyToPostID uint `gorm:"foreignkey:Post"`
+	ReplyToPostID uint `gorm:"foreignkey:Post;default:null"`
 	ReplyToPost   *Post
-	SharePostID   uint `gorm:"foreignkey:Post"`
+	SharePostID   uint `gorm:"foreignkey:Post;default:null"`
 	SharePost     *Post
 }
 

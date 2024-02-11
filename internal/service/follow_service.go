@@ -13,7 +13,6 @@ import (
 	"github.com/third-place/community-service/internal/repository"
 	"github.com/third-place/community-service/internal/util"
 	"log"
-	"time"
 )
 
 type FollowService struct {
@@ -113,9 +112,7 @@ func (f *FollowService) DeleteFollow(followUuid uuid.UUID, userUuid uuid.UUID) e
 	if follow.UserID != user.ID {
 		return errors.New("not allowed")
 	}
-	deletedAt := time.Now()
-	follow.DeletedAt = &deletedAt
-	f.followRepository.Update(follow)
+	f.followRepository.Delete(follow)
 	return nil
 }
 

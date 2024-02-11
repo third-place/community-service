@@ -8,7 +8,6 @@ import (
 	"github.com/third-place/community-service/internal/model"
 	"github.com/third-place/community-service/internal/repository"
 	"github.com/third-place/community-service/internal/util"
-	"time"
 )
 
 type UserService struct {
@@ -32,9 +31,7 @@ func (s *UserService) DeleteUser(userUuid uuid.UUID) error {
 	if err != nil {
 		return err
 	}
-	deletedAt := time.Now()
-	userEntity.DeletedAt = &deletedAt
-	s.userRepository.Save(userEntity)
+	s.userRepository.Delete(userEntity)
 	return nil
 }
 

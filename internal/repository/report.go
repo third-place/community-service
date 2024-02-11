@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/third-place/community-service/internal/entity"
+	"gorm.io/gorm"
 )
 
 type ReportRepository struct {

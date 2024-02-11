@@ -1,0 +1,23 @@
+service:
+  enabled: true
+  port: 8002
+  targetPort: 8081
+  secrets:
+    POSTGRES_PASSWORD: AgAEiR9CI2hoX6HXzh0YClunJg3BrmB4FSFT/LWxCIz/prEJdWQyEvWSTumtaPzYf4XcMg2KLI9coFocLhtWKBfBXxIOo6L17bL4I/5RT+uU7BzjfTKeWivqigABtkv5KSppDXcgflaN91oUcu/mrgakq1aoFeCPcDHZlJBTsbwAzjbiSOSJbzaAt+8fLyUqyGEjRTwJ73P2Krwu9XsfzGIdXC9rt4xzMi8JVg1FE434SMWq57edHroy9Ou5afiRenbAjt+apBJ1CWESq/5GD2fS8hRcaQ2BDTXxAgBWiLHKfjiS+MmHKL4K1FYHx57udLa/5oHZexi+GzvxOlPgRvU8a4OPYF5GJqluCJcJVGQ0CD63Ak3DI0UuoTmywxsVHUcCTkNtDEVlolLA27YawI3ioMjDY/50QD2JSkQgdghWF6S2cFB9u95O5D2P/m3jVk1p7StcyDov3jq7GXfE21+pzNTjst67OIcJVdOh1AItzkRfR1RKP9lvbHg7dyvaFunCPg8Bwr78ElPoJ7kYC6G3dos9k+ybHYSI2H0SbKQ+vJUr80GGtTqmkXpLuoK2oo/P7qjdeClhGu51wwK5sWsObvdWi2JHXkTzi9sX14TudIei6dN5sFlfs/T6wF4G7C9cS0KQPQY/ld3HUkysMeFXDdzSJg+mo5wBrcSU46Rtasv/L1xpjeLeHNTdtHQIq29PP87INfQo2NjAM8N1uiWsGRIxIjA2xOQ=
+    JWT_KEY: AgCy1yvc8/FJgMmCmurorrNaYDBVNGskDaZWJypkG979CHcE6YWCJ09/eQeVAkVPHiApZ+4VevpyyvUB9OG1V1/0AxbiVXjCkitkRyK4Isfq5IlUrxFVoliAifFUxE0odyHZXyd7/VCQbnqpn0xy4vk1kPxX2QdCuvqDdZtawmYVoTi2/Tbb4IzQs509liZop/xC54M7pJjOMA3G2MOfDbehyDdk6O4V/LMmz+FBBi6VoAto0I+Nf5bDftx5o79S5AukFbNfVobZlWA25KDXLAOetPYc3i/pkV6DdeZwrMFMq+DKRNYP1w+24wJi3J4ZgRRrhhzdQhiNJvwe238CTqQSwAk4kTu5AMI+7P2UxfOVH8dl0GuKaKtm64j5PmQdM5gJXuMVWBeeEODvT/GPQQSebAdOCQ5p+nGTloxPCNAyArsn8nngWPVKJBNApSaR7O/XOHvqrBDQo7symEdrFBSXMM5S2d4YBwjxDeHkEOz46eYyEuefywRBTCwhzorBhYAI4cqejQM+gM/eCmQlrOKjfQSbsvW3IYm+Cfl4A8QyeQohhD1AiSF1TofS7BTGjh96uLvOjG0nCdz9c+YiENeMdUt/BjRJhp65unp031whYY/v05Yd1RYwiKkXHrW84giR1O0YLvrZ9hN3+CVLW6CNbHK9NWOdQzGr5dsYkwACOjBUJ54CyRJMi395ApvGPfrEG+DKNWwXNv8NkxoaOjjDuPjiX1x7gqnbOdKOe5b/6aCdP+DHG1AKr3/nnyuR8mN2TVcEFjW3rW1OlUr5sQT2
+  postgresql:
+    enabled: true
+    auth:
+      username: service_user
+      database: community_service
+  env:
+    KAFKA_BOOTSTRAP_SERVERS: thirdplace-kafka-kafka-bootstrap.kafka.svc.cluster.local
+    KAFKA_SECURITY_PROTOCOL:
+    KAFKA_SASL_MECHANISM:
+    KAFKA_SASL_USERNAME:
+    KAFKA_SASL_PASSWORD:
+
+    POSTGRES_HOST: community-service-postgresql.user-service.svc.cluster.local
+    POSTGRES_PORT: 5432
+    POSTGRES_DBNAME: community_service
+    POSTGRES_USER: service_user

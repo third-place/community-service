@@ -2,8 +2,8 @@ package repository
 
 import (
 	"errors"
-	"github.com/jinzhu/gorm"
 	"github.com/third-place/community-service/internal/entity"
+	"gorm.io/gorm"
 )
 
 type LikeRepository struct {

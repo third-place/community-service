@@ -3,9 +3,9 @@ package repository
 import (
 	"errors"
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"github.com/third-place/community-service/internal/constants"
 	"github.com/third-place/community-service/internal/entity"
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
@@ -68,4 +68,8 @@ func (u *UserRepository) Create(user *entity.User) {
 
 func (u *UserRepository) Save(user *entity.User) {
 	u.conn.Save(user)
+}
+
+func (u *UserRepository) Delete(user *entity.User) {
+	u.conn.Delete(user)
 }

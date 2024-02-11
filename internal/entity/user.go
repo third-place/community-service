@@ -2,8 +2,8 @@ package entity
 
 import (
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"github.com/third-place/community-service/internal/model"
+	"gorm.io/gorm"
 )
 
 type User struct {

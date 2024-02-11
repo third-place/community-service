@@ -2,8 +2,8 @@ package repository
 
 import (
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 	"github.com/third-place/community-service/internal/entity"
+	"gorm.io/gorm"
 )
 
 type FollowRepository struct {
@@ -52,4 +52,8 @@ func (f *FollowRepository) FindOne(followUuid uuid.UUID) *entity.Follow {
 
 func (f *FollowRepository) Update(follow *entity.Follow) {
 	f.conn.Save(follow)
+}
+
+func (f *FollowRepository) Delete(follow *entity.Follow) {
+	f.conn.Delete(follow)
 }

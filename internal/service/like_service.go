@@ -66,7 +66,7 @@ func (l *LikeService) DeleteLikeForPost(postUuid uuid.UUID, userUuid uuid.UUID) 
 }
 
 func (l *LikeService) publishPostLikeToKafka(like *model.PostLike) error {
-	topic := "postLikes"
+	topic := "post-likes"
 	data, _ := json.Marshal(like)
 	return l.kafkaWriter.Produce(
 		&kafka.Message{

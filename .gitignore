@@ -22,3 +22,9 @@ build/
 postgres-data/
 community-service
 vendor/
+
+# osx
+.DS_Store
+
+# helm
+charts/

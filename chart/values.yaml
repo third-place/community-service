@@ -40,7 +40,7 @@ service:
     KAFKA_SASL_USERNAME:
     KAFKA_SASL_PASSWORD:
 
-    POSTGRES_HOST: community-service-postgresql.community-service.svc.cluster.local
+    POSTGRES_HOST: community-service-postgres.community-service.svc.cluster.local
     POSTGRES_PORT: 5432
     POSTGRES_DBNAME: community_service
     POSTGRES_USER: service_user

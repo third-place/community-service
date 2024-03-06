@@ -15,8 +15,7 @@ jobs:
   deploy-service:
     needs: publish-docker-image
     uses: third-place/actions/.github/workflows/deploy-env.yaml@main
+    secrets: inherit
     with:
       name: community-service
       env: dev
-    secrets:
-      PAT: ${{ secrets.CR_PAT }}

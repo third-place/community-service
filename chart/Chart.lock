@@ -1,9 +1,9 @@
 dependencies:
 - name: service
   repository: oci://ghcr.io/third-place
-  version: 0.0.58
+  version: 0.0.62
 - name: postgres
   repository: oci://ghcr.io/third-place
   version: 0.0.3
-digest: sha256:9d05fb20aaf963005325ab772be48d086d06f78e167ef64b47753cb3a3b01edf
-generated: "2024-02-18T22:02:02.290081-08:00"
+digest: sha256:f0d865b589ee30aaf05d0b6ee81507a98ccc2329c20d55fa8501642d83b31ad7
+generated: "2024-03-08T07:35:45.556389-08:00"

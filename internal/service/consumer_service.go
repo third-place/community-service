@@ -68,14 +68,14 @@ func (c *ConsumerService) updateUserImage(data []byte) {
 	result := decodeToMap(data)
 	user := result["user"].(map[string]interface{})
 	userUuid := user["uuid"].(string)
-	s3Key := result["s3_key"].(string)
-	log.Print("update user profile pic :: {}, {}, {}", userUuid, s3Key, result)
+	key := result["key"].(string)
+	log.Print("update user profile pic :: {}, {}, {}", userUuid, key, result)
 	userModel, err := c.GetUser(uuid.MustParse(userUuid))
 	if err != nil {
 		log.Print("user not found when updating profile pic")
 		return
 	}
-	userModel.ProfilePic = s3Key
+	userModel.ProfilePic = key
 	c.UpsertUser(userModel)
 }
 

@@ -29,11 +29,11 @@ service:
       - /follow/*
   resources:
     requests:
-      memory: 1000Mi
-      cpu: 500m
+      memory: 256Mi
+      cpu: 250m
     limits:
-      memory: 1250Mi
-      cpu: 750m
+      memory: 512Mi
+      cpu: 500m
   env:
     KAFKA_BOOTSTRAP_SERVERS: thirdplace-kafka-kafka-brokers.kafka.svc.cluster.local
     KAFKA_SECURITY_PROTOCOL:

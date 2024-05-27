@@ -34,6 +34,8 @@ service:
     limits:
       memory: 512Mi
       cpu: 500m
+  consumer:
+    enabled: true
   env:
     KAFKA_BOOTSTRAP_SERVERS: thirdplace-kafka-kafka-brokers.kafka.svc.cluster.local
     KAFKA_SECURITY_PROTOCOL:
